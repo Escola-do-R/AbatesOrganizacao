@@ -1,7 +1,5 @@
-library(dplyr)
-library(tidyr)
 library(tidyverse)
 library(data.table)
 
-Abates <- fread("C:/Users/Utilizador/Desktop/Epi/Problema 4 Abates/Abates.csv") 
+Abates <- fread("./Abates.csv") 
 Abates
