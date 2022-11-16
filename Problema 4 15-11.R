@@ -5,3 +5,4 @@ library(data.table)
 
 Abates <- fread("C:/Users/Utilizador/Desktop/Epi/Problema 4 Abates/Abates.csv") 
 Abates
+m
