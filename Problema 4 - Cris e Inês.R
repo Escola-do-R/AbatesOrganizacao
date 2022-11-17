@@ -17,7 +17,7 @@ graph_tipoabate <- plot_ly(data = count(Abates1, Tipo_abate),
 graph_tipoabate
 # # # # # # #
 
-# Gráfico de barras do total de abates por matadouro
+# Grafico de barras do total de abates por matadouro
 abates_matadouro <- summarize(
     group_by(Abates1, Matadouro), 
     count=n()
