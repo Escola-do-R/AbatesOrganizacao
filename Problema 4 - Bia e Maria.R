@@ -3,6 +3,7 @@ library(data.table)
 library(lubridate)
 library(freqtables)
 library(plotly)
+library(rstatix)
 
 Abates <- fread("./Abates.csv") 
 
@@ -25,20 +26,34 @@ Abates_peso <- select(Abates, Data_abate, Data_nasc, Peso, Raca, Sexo) %>%
     ) %>% 
   mutate(Raca = (str_replace(Raca,c("<",">"),"")))
 
-# A nivel de estatistica descritiva por raça
+# Inicio de estatistica descritiva
+# Acho que repeti as tabelas de frequencia, mas if anything temos 2 maneiras possiveis de as fazer
+# Fiz à brute force e com library freqtables
+
+# Raca
 Abates_prop_raca <- Abates_peso %>% 
   group_by(Raca) %>% 
   summarise(n = n()) %>% 
   mutate(Proportion = n / sum(n))%>% 
-  mutate(Percent = (n / sum(n) * 100) %>% round(3)) %>% 
+  mutate(Percent = (n / sum(n) * 100) %>% round(3))
 
+Freq_abates_raca <- Abates_peso %>% 
+  freq_table(Raca)
 
+stats_peso <- Abates_peso %>% 
+  get_summary_stats(idade_ao_abate)
+
+# Sexo
 Abates_prop_sexo <- Abates_peso %>% 
   group_by(Sexo) %>% 
   summarise(n = n()) %>% 
   mutate(Proportion = n / sum(n))%>% 
   mutate(Percent = (n / sum(n) * 100) %>% round(3))
 
+Freq_abates_sexo <- Abates_peso %>% 
+  freq_table(Sexo)
+
+# Idade
 # Idade ao abate e variavel continua, primeiro separei em ranges e depois fiz freq table com esses ranges
 Abates_peso$idade_range <- cut(Abates_peso$idade_ao_abate, breaks= c(0,1,2,3,4,5,10,20,30),
                                labels=c("0-1","1-2","2-3","3-4","4-5","5-10","10-20","+20"))
@@ -49,23 +64,11 @@ Abates_prop_idade <- Abates_peso %>%
   mutate(Proportion = n / sum(n))%>% 
   mutate(Percent = (n / sum(n) * 100) %>% round(3))
 
-# Tabela freq 
-Freq_abates_raca <- Abates_peso %>% 
-  freq_table(Raca)
-
-Freq_abates_sexo <- Abates_peso %>% 
-  freq_table(Sexo)
-
 Freq_abates_idade <- Abates_peso %>% 
   freq_table(idade_range)
 
 # Representação gráfica
-
-# abates_sexo <- summarize(
-#   group_by(Abates_peso, Sexo), 
-#   count=n()
-# )
-# 
+ 
 graph_abates_sexo <- Abates_prop_sexo %>%
   plot_ly(x = ~n, y = ~Sexo, type = 'bar') %>%
   layout(title = "Abates por Sexo")
@@ -76,7 +79,10 @@ graph_abates_raca <- Abates_prop_raca %>%
   layout(title = "Abates por Raça")
 graph_abates_raca
 
-# Fiz um grafico de barras por range de idades, nao sei se tambem seria fixe fazer um histograma disto
+# Fiz um grafico de barras por range de idades (no plotly) e um histograma (simples com base R)
 graph_abates_idade <- Abates_prop_idade %>% 
   plot_ly(x=~n, y=~idade_range, type="bar")
 graph_abates_idade
+
+# Acho que isto ficava mais bonito no plotly, mas o pc estava a empancar
+histo_idade <- hist(Abates_peso$idade_ao_abate)
