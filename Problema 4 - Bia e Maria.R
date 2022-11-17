@@ -24,13 +24,34 @@ Abates_peso <- select(Abates, Data_abate, Data_nasc, Peso, Raca, Sexo) %>%
     )
 
 # A nivel de estatistica descritiva por raça
-Abates_prop <- Abates_peso %>% 
+Abates_prop_raca <- Abates_peso %>% 
   group_by(Raca) %>% 
   summarise(n = n()) %>% 
   mutate(Proportion = n / sum(n))%>% 
   mutate(Percent = (n / sum(n) * 100) %>% round(3))
 
+Abates_prop_sexo <- Abates_peso %>% 
+  group_by(Sexo) %>% 
+  summarise(n = n()) %>% 
+  mutate(Proportion = n / sum(n))%>% 
+  mutate(Percent = (n / sum(n) * 100) %>% round(3))
+
+# Idade ao abate e variavel continua, primeiro separei em ranges e depois fiz freq table com esses ranges
+Abates_peso$idade_range <- cut(Abates_peso$idade_ao_abate, breaks= c(0,1,2,3,4,5,10,20,30),
+                               labels=c("0-1","1-2","2-3","3-4","4-5","5-10","10-20","+20"))
+
+Abates_prop_idade <- Abates_peso %>% 
+  group_by(idade_range) %>% 
+  summarise(n = n()) %>% 
+  mutate(Proportion = n / sum(n))%>% 
+  mutate(Percent = (n / sum(n) * 100) %>% round(3))
+
 # Tabela freq 
-Freq_abates <- Abates_peso %>% 
+Freq_abates_raca <- Abates_peso %>% 
   freq_table(Raca)
 
+Freq_abates_sexo <- Abates_peso %>% 
+  freq_table(Sexo)
+
+Freq_abates_idade <- Abates_peso %>% 
+  freq_table(idade_range)
