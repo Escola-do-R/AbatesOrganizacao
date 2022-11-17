@@ -2,6 +2,7 @@ library(tidyverse)
 library(data.table)
 library(lubridate)
 library(freqtables)
+library(plotly)
 
 Abates <- fread("./Abates.csv") 
 
@@ -20,15 +21,17 @@ Abates <- fread("./Abates.csv")
 Abates_peso <- select(Abates, Data_abate, Data_nasc, Peso, Raca, Sexo) %>% 
   mutate(
     idade_ao_abate= round ((Data_nasc %--% Data_abate) / years(1),1),
-    Peso = as.numeric(str_replace(Peso, ",", "."))
-    )
+    Peso = as.numeric(str_replace(Peso, ",", ".")),
+    ) %>% 
+  mutate(Raca = (str_replace(Raca,c("<",">"),"")))
 
 # A nivel de estatistica descritiva por raça
 Abates_prop_raca <- Abates_peso %>% 
   group_by(Raca) %>% 
   summarise(n = n()) %>% 
   mutate(Proportion = n / sum(n))%>% 
-  mutate(Percent = (n / sum(n) * 100) %>% round(3))
+  mutate(Percent = (n / sum(n) * 100) %>% round(3)) %>% 
+
 
 Abates_prop_sexo <- Abates_peso %>% 
   group_by(Sexo) %>% 
@@ -55,3 +58,20 @@ Freq_abates_sexo <- Abates_peso %>%
 
 Freq_abates_idade <- Abates_peso %>% 
   freq_table(idade_range)
+
+# Representação gráfica
+
+# abates_sexo <- summarize(
+#   group_by(Abates_peso, Sexo), 
+#   count=n()
+# )
+# 
+# graph_abates_sexo <- abates_sexo %>% 
+#   plot_ly(x = ~count, y = ~Sexo, type = 'bar') %>% 
+#   layout(title = "Abates por Sexo")
+# graph_abates_sexo
+
+graph_abates_raca <- Abates_prop_raca %>% 
+  plot_ly(x = ~n, y = ~Raca, type = 'bar') %>% 
+  layout(title = "Abates por Raça")
+graph_abates_raca
