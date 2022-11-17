@@ -23,3 +23,8 @@ graph_abates_matadouro <- abates_matadouro %>%
   layout(title = "Abates por Matadouro")
 
 graph_abates_matadouro
+
+abates_raca <- summarize(
+  group_by(Abates1, Raca), 
+  count=n()
+)
