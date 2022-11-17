@@ -12,3 +12,14 @@ graph_tipo <- plot_ly(data = count(Abates1, Tipo_abate),
               layout(title = "Tipo de Abates")
 
 graph_tipo
+
+abates_matadouro <- summarize(
+    group_by(Abates1, Matadouro), 
+    count=n()
+  )
+
+graph_abates_matadouro <- abates_matadouro %>% 
+  plot_ly(x = ~count, y = ~Matadouro, type = 'bar') %>% 
+  layout(title = "Abates por Matadouro")
+
+graph_abates_matadouro
