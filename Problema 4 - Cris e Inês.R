@@ -9,29 +9,40 @@ Abates
 Abates1 <- select(Abates, Matadouro, MAC, Tipo_abate, Exploracao, Raca) %>%  
   mutate(Matadouro = (str_replace(Matadouro,c("<",">"),"")))
 
-graph_tipo <- plot_ly(data = count(Abates1, Tipo_abate), 
+# Grafico da percentagem de tipo de abate
+graph_tipoabate <- plot_ly(data = count(Abates1, Tipo_abate), 
                       labels = ~Tipo_abate, values = ~n, type = "pie") %>% 
               layout(title = "Tipo de Abates")
 
-graph_tipo
+graph_tipoabate
+# # # # # # #
 
-
+# Gráfico de barras do total de abates por matadouro
 abates_matadouro <- summarize(
     group_by(Abates1, Matadouro), 
     count=n()
   )
-
-tipoabate_matadouro <- tabyl(Abates1, Matadouro, Tipo_abate)
-abate_raca_matadouro <- tabyl(Abates1, Matadouro, Raca)
 
 graph_abates_matadouro <- abates_matadouro %>% 
   plot_ly(x = ~count, y = ~Matadouro, type = 'bar') %>% 
   layout(title = "Abates por Matadouro")
 
 graph_abates_matadouro
+# # # # # # # # # #
 
-abates_raca <- summarize(
-  group_by(Abates1, Raca), 
-  count=n()
-)
+# Grafico tipo de abate por matadouro
+tipoabate_matadouro <- tabyl(Abates1, Matadouro, Tipo_abate)
+
+graph_tipoabate_matadouro <- tipoabate_matadouro %>% 
+  plot_ly(x = ~E, y = ~Matadouro, type = 'bar', name = 'Emergencia') %>% 
+  add_trace(x = ~N, name = 'Normal') %>% 
+  add_trace(x = ~S, name = 'Sanitario') %>% 
+  layout(title = "Tipo de Abate por Matadouro", barmode = 'group')
+
+graph_tipoabate_matadouro
+
+# Grafico abates por matadouro por raca
+abates_matadouro_raca <- tabyl(Abates1, Matadouro, Raca)
+
+
 
