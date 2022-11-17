@@ -1,6 +1,7 @@
 library(tidyverse)
 library(data.table)
 library(plotly)
+library(janitor)
 
 Abates <- fread("./Abates.csv") 
 Abates
@@ -19,6 +20,9 @@ abates_matadouro <- summarize(
     group_by(Abates1, Matadouro), 
     count=n()
   )
+
+tipoabate_matadouro <- tabyl(Abates1, Matadouro, Tipo_abate)
+abate_raca_matadouro <- tabyl(Abates1, Matadouro, Raca)
 
 graph_abates_matadouro <- abates_matadouro %>% 
   plot_ly(x = ~count, y = ~Matadouro, type = 'bar') %>% 
