@@ -66,12 +66,17 @@ Freq_abates_idade <- Abates_peso %>%
 #   count=n()
 # )
 # 
-# graph_abates_sexo <- abates_sexo %>% 
-#   plot_ly(x = ~count, y = ~Sexo, type = 'bar') %>% 
-#   layout(title = "Abates por Sexo")
-# graph_abates_sexo
+graph_abates_sexo <- Abates_prop_sexo %>%
+  plot_ly(x = ~n, y = ~Sexo, type = 'bar') %>%
+  layout(title = "Abates por Sexo")
+graph_abates_sexo
 
 graph_abates_raca <- Abates_prop_raca %>% 
   plot_ly(x = ~n, y = ~Raca, type = 'bar') %>% 
   layout(title = "Abates por Raça")
 graph_abates_raca
+
+# Fiz um grafico de barras por range de idades, nao sei se tambem seria fixe fazer um histograma disto
+graph_abates_idade <- Abates_prop_idade %>% 
+  plot_ly(x=~n, y=~idade_range, type="bar")
+graph_abates_idade
