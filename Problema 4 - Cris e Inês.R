@@ -43,6 +43,3 @@ graph_tipoabate_matadouro
 
 # Grafico abates por matadouro por raca
 abates_matadouro_raca <- tabyl(Abates1, Matadouro, Raca)
-
-
-
