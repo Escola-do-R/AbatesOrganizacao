@@ -40,6 +40,7 @@ Abates_prop_raca <- Abates_peso %>%
 Freq_abates_raca <- Abates_peso %>% 
   freq_table(Raca)
 
+#Peso
 stats_peso <- Abates_peso %>% 
   get_summary_stats(idade_ao_abate)
 
@@ -97,3 +98,14 @@ histo_idade_plotly <- Abates_peso %>%
   layout(title="Abates por Idade") %>%
   layout(xaxis = list(title = "Idade"), yaxis = list(title = "Frequência"))
 histo_idade_plotly
+
+#Criei ranges para o Peso
+Abates_peso$peso_range <- cut(Abates_peso$Peso, breaks= c(0,50,100,150,200,250,300,350,400,450,500,550,600,650,700,800),
+                               labels=c("0-50","50-100","100-150","150-200","200-250","250-300","300-350","350-400", "400-450", "450-500", "500-550", "550-600", "600-650", "650-700", "+700"))
+
+#grafico plotly para as ranges de peso
+graph_abates_peso <- Abates_peso %>% 
+  plot_ly(x=~peso_range, type="histogram") %>%
+  layout(title="Abates por Peso") %>%
+  layout(xaxis = list(title = "Peso"), yaxis = list(title = "Frequência"))
+graph_abates_peso
