@@ -109,3 +109,19 @@ graph_abates_peso <- Abates_peso %>%
   layout(title="Abates por Peso") %>%
   layout(xaxis = list(title = "Peso"), yaxis = list(title = "Frequência"))
 graph_abates_peso
+
+
+#Vou tentar criar um boxplot para comparar a distribuição dos pesos tendo em conta o sexo, raça e idade É RELEVANTE THO??
+box_peso_sexo <- Abates_peso %>%
+  plot_ly(y=~Peso, x=~Sexo, type="box")
+box_peso_sexo 
+  
+box_peso_raca <- Abates_peso %>%
+  plot_ly(y=~Raca, x=~Peso, type="box")
+box_peso_raca  
+  
+box_peso_idade <- Abates_peso %>%
+  plot_ly(y=~idade_range, x=~Peso, type="box")   
+box_peso_idade
+  
+  
