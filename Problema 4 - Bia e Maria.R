@@ -71,18 +71,29 @@ Freq_abates_idade <- Abates_peso %>%
  
 graph_abates_sexo <- Abates_prop_sexo %>%
   plot_ly(x = ~n, y = ~Sexo, type = 'bar') %>%
-  layout(title = "Abates por Sexo")
+  layout(title = "Abates por Sexo") %>%
+  layout(xaxis = list(title = "Frequência"), yaxis = list(title = "Sexo"))  
 graph_abates_sexo
 
 graph_abates_raca <- Abates_prop_raca %>% 
   plot_ly(x = ~n, y = ~Raca, type = 'bar') %>% 
-  layout(title = "Abates por Raça")
+  layout(title = "Abates por Raça") %>%
+  layout(xaxis = list(title = "Frequência"), yaxis = list(title = "Raça"))  
 graph_abates_raca
 
 # Fiz um grafico de barras por range de idades (no plotly) e um histograma (simples com base R)
 graph_abates_idade <- Abates_prop_idade %>% 
-  plot_ly(x=~n, y=~idade_range, type="bar")
+  plot_ly(x=~n, y=~idade_range, type="bar") %>%
+  layout(title="Abates por Idade") %>%
+  layout(xaxis = list(title = "Frequência"), yaxis = list(title = "Idade"))  
 graph_abates_idade
 
 # Acho que isto ficava mais bonito no plotly, mas o pc estava a empancar
 histo_idade <- hist(Abates_peso$idade_ao_abate)
+
+#a mesma coisa que o histo_idade mas no plotly (a mim nao me empancou?)
+histo_idade_plotly <- Abates_peso %>% 
+  plot_ly(x=~idade_range, type="histogram") %>%
+  layout(title="Abates por Idade") %>%
+  layout(xaxis = list(title = "Idade"), yaxis = list(title = "Frequência"))
+histo_idade_plotly
