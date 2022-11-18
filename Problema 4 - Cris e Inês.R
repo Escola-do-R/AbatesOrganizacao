@@ -43,3 +43,10 @@ graph_tipoabate_matadouro
 
 # Grafico abates por matadouro por raca
 abates_matadouro_raca <- tabyl(Abates1, Matadouro, Raca)
+
+tabela_count_raca <- left_join(abates_matadouro, abates_matadouro_raca)
+
+graph_abates_matadouro_raca <- plot_ly(data = Abates1, x = ~Matadouro, y = ~n, color = ~Raca, 
+                                       colors = "Set3", type = "scatter", mode="markers")
+
+graph_abates_matadouro_raca
