@@ -8,7 +8,8 @@ Abates <- fread("./Abates.csv")
 Abates
 
 Abates1 <- select(Abates, Matadouro, MAC, Tipo_abate, Exploracao, Raca) %>%  
-  mutate(Matadouro = (str_replace(Matadouro,c("<",">"),"")))
+  mutate(Matadouro = (str_replace(Matadouro,c("<",">"),""))) %>%
+  mutate(Raca = (str_replace(Raca,c("<",">"),"")))
 
 # Grafico da percentagem de tipo de abate
 graph_tipoabate <- plot_ly(data = count(Abates1, Tipo_abate), 
@@ -49,7 +50,7 @@ graph_tipoabate_matadouro
 
 tab_raca_matadouro <- group_by(Abates1, Matadouro) %>% count(Raca)
 
-tab_raca_matadouro <- tab_raca_matadouro %>%mutate(Raca = (str_replace(Raca,c("<",">"),"")))
+# tab_raca_matadouro <- tab_raca_matadouro %>% mutate(Raca = (str_replace(Raca,c("<",">"),"")))
 
 # Criar palete para as nossas 38 racas, porque as paletes pre definidas nao suportam tantas classes
 pal <- brewer.pal(12, "Set3") 
@@ -61,4 +62,7 @@ graph_abates_matadouro_raca <- plot_ly(data = tab_raca_matadouro, x = ~Matadouro
 
 graph_abates_matadouro_raca
 
+# First try ANOVA
+
+model <- aov(Raca ~ Tipo_abate, data = Abates1)
  
