@@ -43,11 +43,13 @@ graph_tipoabate_matadouro <- tipoabate_matadouro %>%
 graph_tipoabate_matadouro
 
 # Grafico abates por matadouro por raca
-abates_matadouro_raca <- tabyl(Abates1, Matadouro, Raca)
 
+# abates_matadouro_raca <- tabyl(Abates1, Matadouro, Raca)
 # tabela_count_raca <- left_join(abates_matadouro, abates_matadouro_raca)
+
 tab_raca_matadouro <- group_by(Abates1, Matadouro) %>% count(Raca)
 
+# Criar palete para as nossas 38 racas, porque as paletes pre definidas nao suportam tantas classes
 pal <- brewer.pal(12, "Set3") 
 pal <- colorRampPalette(pal)(38)
 
