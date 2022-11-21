@@ -2,6 +2,7 @@ library(tidyverse)
 library(data.table)
 library(plotly)
 library(janitor)
+library(RColorBrewer)
 
 Abates <- fread("./Abates.csv") 
 Abates
@@ -42,11 +43,20 @@ graph_tipoabate_matadouro <- tipoabate_matadouro %>%
 graph_tipoabate_matadouro
 
 # Grafico abates por matadouro por raca
-abates_matadouro_raca <- tabyl(Abates1, Matadouro, Raca)
 
-tabela_count_raca <- left_join(abates_matadouro, abates_matadouro_raca)
+# abates_matadouro_raca <- tabyl(Abates1, Matadouro, Raca)
+# tabela_count_raca <- left_join(abates_matadouro, abates_matadouro_raca)
 
-graph_abates_matadouro_raca <- plot_ly(data = Abates1, x = ~Matadouro, y = ~n, color = ~Raca, 
-                                       colors = "Set3", type = "scatter", mode="markers")
+tab_raca_matadouro <- group_by(Abates1, Matadouro) %>% count(Raca)
+
+# Criar palete para as nossas 38 racas, porque as paletes pre definidas nao suportam tantas classes
+pal <- brewer.pal(12, "Set3") 
+pal <- colorRampPalette(pal)(38)
+
+graph_abates_matadouro_raca <- plot_ly(data = tab_raca_matadouro, x = ~Matadouro, y = ~n,
+                                       color = ~Raca, colors = pal,
+                                       type = 'scatter', mode = 'markers')
 
 graph_abates_matadouro_raca
+
+ 
