@@ -49,6 +49,8 @@ graph_tipoabate_matadouro
 
 tab_raca_matadouro <- group_by(Abates1, Matadouro) %>% count(Raca)
 
+tab_raca_matadouro <- tab_raca_matadouro %>%mutate(Raca = (str_replace(Raca,c("<",">"),"")))
+
 # Criar palete para as nossas 38 racas, porque as paletes pre definidas nao suportam tantas classes
 pal <- brewer.pal(12, "Set3") 
 pal <- colorRampPalette(pal)(38)
