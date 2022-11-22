@@ -108,22 +108,19 @@ graph_abates_raca <- Abates_prop_raca %>%
   layout(xaxis = list(title = "Frequência"), yaxis = list(title = "Raça"))  
 graph_abates_raca
 
-# Fiz um grafico de barras por range de idades (no plotly) e um histograma (simples com base R)
+# Fiz um grafico de barras por range de idades (no plotly)
 graph_abates_idade <- Abates_prop_idade %>% 
   plot_ly(x=~n, y=~idade_range, type="bar") %>%
   layout(title="Abates por Idade") %>%
   layout(xaxis = list(title = "Frequência"), yaxis = list(title = "Idade"))  
 graph_abates_idade
 
-# Acho que isto ficava mais bonito no plotly, mas o pc estava a empancar
-histo_idade <- hist(Abates_peso$idade_ao_abate)
-
-#a mesma coisa que o histo_idade mas no plotly (a mim nao me empancou?)
-histo_idade_plotly <- Abates_peso %>% 
+#Histograma idades
+histo_idade <- Abates_peso %>% 
   plot_ly(x=~idade_range, type="histogram") %>%
   layout(title="Abates por Idade") %>%
   layout(xaxis = list(title = "Idade"), yaxis = list(title = "Frequência"))
-histo_idade_plotly
+histo_idade
 
 #grafico plotly para as ranges de peso
 graph_abates_peso <- Abates_peso %>% 
@@ -154,8 +151,32 @@ box_peso_idade
 ##testar permissas da ANOVA
 #1. Homogeneidade - Levene Test testa se a variancia entre grupos é igual. H0=variancia igual; H1=variancia NAO igual
 library(car)
-leveneTest(Peso ~ idade_range, data=Abates_peso) #como Pr<0.05, rejeita-se H0, ou seja: variancia NAO é igual (suportada pelo boxplot) e nao se pode usar ANOVA?
+leveneTest(Peso ~ idade_range, data=Abates_peso) 
+#como Pr<0.05, rejeita-se H0, ou seja: variancia NAO é igual (suportada pelo boxplot) e nao se pode usar ANOVA?
+
 #2. testar dist. normal - Kolmogorov-Smirnov Test para n>50. nao faço ideia se isto está bem
 ks.test(Abates_peso$idade_ao_abate, Abates_peso$Peso)
+
+# Acho que é mais fazeres cada variavel a comparar com a distribuicao normal
+ks.test(Abates_peso$Peso, pnorm)
+ks.test(Abates_peso$idade_ao_abate, pnorm)
+# E deram as duas <0.05, acho que significa que nao tem dist normal
+
+# Temos entao de entrar nos testes nao parametricos
 #Alternativa teste não paramétrico do One way ANOVA test é o KRUSKAL-WALLIS TEST (e correlaçao de spearman em vez de pearson)
-  
+
+kruskal.test(Peso ~ idade_ao_abate, data=Abates_peso)
+# Ora isto deu p<0.05, significando que rejeitas H0 e portanto temos diferencas estatisticamente significativas no peso consoante idade (previsivel)
+cor.test(Abates_peso$Peso, Abates_peso$idade_ao_abate, method = "spearman")
+# Este tambem deu <0.05 e portanto ha correlacao (again, expected)
+
+
+### PESO-RACA (quantitativa- qualitativa)
+# isto seria um chisquare acho
+chisq.test(Abates_peso$Peso, Abates_peso$Raca)
+# Deu p<0.05 e portanto verificamos associacao estatisticamente significativa entre raca e peso
+
+
+### PESO-SEXO (quantitativa - qualitativa binaria)
+chisq.test(Abates_peso$Peso, Abates_peso$Sexo)
+# p<0-05 tambem
