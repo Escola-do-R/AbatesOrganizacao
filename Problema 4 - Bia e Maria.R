@@ -93,6 +93,17 @@ Freq_abates_peso <- Abates_peso %>%
   mutate(Percent = (n / sum(n) * 100) %>% round(3)) #a diferença está nos arrendondamentos e no facto de que nao inclui NA's
 
 
+#TABELAS CONTIGÊNCIA 2VARIÁVEIS
+#peso-raça
+tabela_PxR <- as.data.frame.matrix(table(Abates_peso$peso_range,Abates_peso$Raca))
+tabela_PxR
+#peso-sexo
+tabela_PxS <- as.data.frame.matrix(table(Abates_peso$peso_range,Abates_peso$Sexo))
+tabela_PxS
+#peso-idade
+tabela_PxI <- as.data.frame.matrix(table(Abates_peso$peso_range,Abates_peso$idade_range))
+tabela_PxI
+
 
 # REPRESENTAÇÃO GRÁFICA DA ANÁLISE DESCRITIVA
  
@@ -132,17 +143,27 @@ graph_abates_peso
 
 ##TENTATIVA DE ANÁLISE
 #BOXPLOTS
-#para comparar a distribuição dos pesos tendo em conta o sexo, raça e idade. Falta melhorar a estética/labels
+#para comparar a distribuição dos pesos tendo em conta o sexo, raça e idade.
+#tirei as legendas porque achei desnecessário e resolvia-me o problema  do boxplot da raça ficar estranho. 
+#se achares melhor ficar, reverte-se
 box_peso_sexo <- Abates_peso %>%
-  plot_ly(y=~Peso, x=~Sexo, type="box")
+  plot_ly(y=~Peso, x=~Sexo, type="box", color = ~Sexo) %>%
+  layout(title="Peso ao Abate por Sexo") %>%
+  layout(showlegend = FALSE)
 box_peso_sexo 
   
 box_peso_raca <- Abates_peso %>%
-  plot_ly(y=~Raca, x=~Peso, type="box")
+  plot_ly(y=~Raca, x=~Peso, type="box", color = ~Raca)%>% 
+  layout(title="Peso ao Abate por Raça") %>%
+  layout(yaxis = list(title= "Raça")) %>%
+  layout(showlegend = FALSE)
 box_peso_raca  
   
 box_peso_idade <- Abates_peso %>%
-  plot_ly(y=~idade_range, x=~Peso, type="box")   
+  plot_ly(y=~idade_range, x=~Peso, type="box", color=~idade_range)%>%
+  layout(title="Peso ao Abate por Grupo de Idade")%>%
+  layout(yaxis = list(title= "Idade"))%>%
+  layout(showlegend = FALSE)   
 box_peso_idade
 
 
@@ -160,23 +181,25 @@ ks.test(Abates_peso$idade_ao_abate, Abates_peso$Peso)
 # Acho que é mais fazeres cada variavel a comparar com a distribuicao normal
 ks.test(Abates_peso$Peso, pnorm)
 ks.test(Abates_peso$idade_ao_abate, pnorm)
-# E deram as duas <0.05, acho que significa que nao tem dist normal
+# E deram as duas <0.05 = NAO tem dist normal
 
 # Temos entao de entrar nos testes nao parametricos
 #Alternativa teste não paramétrico do One way ANOVA test é o KRUSKAL-WALLIS TEST (e correlaçao de spearman em vez de pearson)
 
 kruskal.test(Peso ~ idade_ao_abate, data=Abates_peso)
 # Ora isto deu p<0.05, significando que rejeitas H0 e portanto temos diferencas estatisticamente significativas no peso consoante idade (previsivel)
-cor.test(Abates_peso$Peso, Abates_peso$idade_ao_abate, method = "spearman")
+cor.test(Abates_peso$Peso, Abates_peso$idade_ao_abate, method = "spearman", exact = FALSE) #dava um erro, na net resolvia-se com o exact=FALSE; na prática, deu o mesmo resultado
 # Este tambem deu <0.05 e portanto ha correlacao (again, expected)
 
 
 ### PESO-RACA (quantitativa- qualitativa)
 # isto seria um chisquare acho
-chisq.test(Abates_peso$Peso, Abates_peso$Raca)
+chisq.test(Abates_peso$peso_range, Abates_peso$Raca) ##na sebenta de biomat diz que a variavel tem que ser quantitaiva em intervalos de classe, por isso troquei
 # Deu p<0.05 e portanto verificamos associacao estatisticamente significativa entre raca e peso
 
 
+
 ### PESO-SEXO (quantitativa - qualitativa binaria)
-chisq.test(Abates_peso$Peso, Abates_peso$Sexo)
+chisq.test(Abates_peso$peso_range, Abates_peso$Sexo)
 # p<0-05 tambem
+
