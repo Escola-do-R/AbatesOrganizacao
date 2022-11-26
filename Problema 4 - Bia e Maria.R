@@ -39,9 +39,9 @@ Abates_peso <- select(Abates, Data_abate, Data_nasc, Peso, Raca, Sexo) %>%
 # Raca
 Abates_prop_raca <- Abates_peso %>% 
   group_by(Raca) %>% 
-  summarise(n = n()) %>% 
-  mutate(Proportion = n / sum(n))%>% 
-  mutate(Percent = (n / sum(n) * 100) %>% round(3))
+  summarise(Frequência = n()) %>% 
+  mutate(Proporção= Frequência / sum(Frequência))%>% 
+  mutate(Percentagem = (Frequência / sum(Frequência) * 100) %>% round(3))
 
 Freq_abates_raca <- Abates_peso %>% 
   freq_table(Raca)
@@ -49,9 +49,9 @@ Freq_abates_raca <- Abates_peso %>%
 # Sexo
 Abates_prop_sexo <- Abates_peso %>% 
   group_by(Sexo) %>% 
-  summarise(n = n()) %>% 
-  mutate(Proportion = n / sum(n))%>% 
-  mutate(Percent = (n / sum(n) * 100) %>% round(3))
+  summarise(Frequência = n()) %>% 
+  mutate(Proporção = Frequência / sum(Frequência))%>% 
+  mutate(Percentagem = (Frequência / sum(Frequência) * 100) %>% round(3))
 
 Freq_abates_sexo <- Abates_peso %>% 
   freq_table(Sexo)
@@ -67,9 +67,9 @@ Abates_peso$idade_range <- cut(Abates_peso$idade_ao_abate, breaks= c(0,1,2,3,4,5
 
 Abates_prop_idade <- Abates_peso %>% 
   group_by(idade_range) %>% 
-  summarise(n = n()) %>% 
-  mutate(Proportion = n / sum(n))%>% 
-  mutate(Percent = (n / sum(n) * 100) %>% round(3))
+  summarise(Frequência = n()) %>% 
+  mutate(Proporção = Frequência / sum(Frequência))%>% 
+  mutate(Percentagem = (Frequência / sum(Frequência) * 100) %>% round(3))
 
 Freq_abates_idade <- Abates_peso %>% 
   freq_table(idade_range)
