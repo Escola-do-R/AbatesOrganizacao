@@ -61,9 +61,11 @@ Deste modo, analisámos as seguintes variáveis:
 
 ## **Estatística Descritiva**
 
-#### **Variáveis *Qualitativas**   
+#### **Variáveis Qualitativas**   
 
-**1. Raça**    
+**1. Raça**     
+
+Tabela de Contingência   
 
 ```{r include=F}
 Abates_prop_raca <- Abates_peso %>% 
@@ -76,7 +78,9 @@ Abates_prop_raca <- Abates_peso %>%
 as.data.frame(Abates_prop_raca)
 ```
 
-**2. Sexo**    
+**2. Sexo**     
+
+Tabela de Contingência  
 
 ```{r include=F}
 Abates_prop_sexo <- Abates_peso %>% 
@@ -105,11 +109,25 @@ Abates_prop_idade <- Abates_peso %>%
   mutate(Percentagem = (Frequência / sum(Frequência) * 100) %>% round(3))
 ```
 
-Texto explicativo tabela das stats   
+
+Medidas de estatística descritiva
 
 ```{r echo=F}
 as.data.frame(stats_idade)
 ```
+
+Legenda:   
+n: número de observações   
+min: mínimo  
+max: máximo   
+median: mediana  
+mean: média   
+q1, q3: 1º e 3º quartis, respetivamente   
+iqr: intervalo interquartis   
+mad: desvio absoluto médio 
+sd: desvio padrão
+se: erro padrão da média   
+ci: intervalo de confiança de 95% 
 
 
 Tabela de Contingência
@@ -126,20 +144,67 @@ as.data.frame(Abates_prop_idade)
 ```{r include=F}
 stats_peso <- Abates_peso %>% 
   get_summary_stats(Peso)
+Abates_prop_peso <- Abates_peso %>% 
+  group_by(peso_range) %>% 
+  summarise(Frequência = n()) %>% 
+  mutate(Proporção = Frequência / sum(Frequência))%>% 
+  mutate(Percentagem = (Frequência / sum(Frequência) * 100) %>% round(3))
 ```
 
 
-
+Medidas de estatística descritiva   
 
 ```{r echo=F}
 as.data.frame(stats_peso)
 ```
 
+Legenda:   
+n: número de observações   
+min: mínimo  
+max: máximo   
+median: mediana  
+mean: média   
+q1, q3: 1º e 3º quartis, respetivamente   
+iqr: intervalo interquartis   
+mad: desvio absoluto médio 
+sd: desvio padrão
+se: erro padrão da média   
+ci: intervalo de confiança de 95% 
 
 
+Tabela de Contingência   
+
+```{r echo=F}
+as.data.frame(Abates_prop_peso)
+```
 
 
+## **Tabela de Contingência de Variáveis agrupadas**
+
+```{r include=F}
+tabela_PxR <- as.data.frame.matrix(table(Abates_peso$peso_range,Abates_peso$Raca))
+tabela_PxS <- as.data.frame.matrix(table(Abates_peso$peso_range,Abates_peso$Sexo))
+tabela_PxI <- as.data.frame.matrix(table(Abates_peso$peso_range,Abates_peso$idade_range))
+```
+
+**Peso-Raça**
+
+```{r echo=F}
+tabela_PxR
+```
+
+**Peso-Sexo**
+
+```{r echo=F}
+tabela_PxS
+```
+
+**Peso-Idade**
+
+```{r echo=F}
+tabela_PxI
+```
 
 
-
+##  **Representação gráfica da Análise Descritiva**  
 

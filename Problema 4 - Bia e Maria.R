@@ -84,9 +84,9 @@ Abates_peso$peso_range <- cut(Abates_peso$Peso, breaks= c(0,50,100,150,200,250,3
 
 Abates_prop_peso <- Abates_peso %>% 
   group_by(peso_range) %>% 
-  summarise(n = n()) %>% 
-  mutate(Proportion = n / sum(n))%>% 
-  mutate(Percent = (n / sum(n) * 100) %>% round(3))
+  summarise(Frequência = n()) %>% 
+  mutate(Proporção = Frequência / sum(Frequência))%>% 
+  mutate(Percentagem = (Frequência / sum(Frequência) * 100) %>% round(3))
 #ou
 Freq_abates_peso <- Abates_peso %>% 
   freq_table(peso_range) %>%
