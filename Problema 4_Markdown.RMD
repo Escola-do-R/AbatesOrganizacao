@@ -38,23 +38,107 @@ Abates_peso$peso_range <- cut(Abates_peso$Peso, breaks= c(0,50,100,150,200,250,3
 
 ```
 
-**Descrição das Variáveis trabalhadas**
+## **Descrição das Variáveis trabalhadas**
 
-Para esta análise, considerámos as seguintes *variáveis pré-existentes*:
-- Data de abate
-- Data de nascimento
-- Peso ao abate
-- Raça
-- Sexo
+Para esta análise, considerámos as seguintes **variáveis pré-existentes**:    
+- Data de abate    
+- Data de nascimento   
+- Peso ao abate   
+- Raça   
+- Sexo  
 
-Com base na data de abate e data de nascimento, foi-nos possível criar uma *nova variável* correspondente à idade.
-Além disso, para facilitar a análise, criámos *intervalos de classe* adaptados às variáveis idade e peso.
+Com base na data de abate e data de nascimento, foi-nos possível criar uma **nova variável** correspondente à idade.    
+Além disso, para facilitar a análise, criámos **intervalos de classe** adaptados às variáveis idade e peso.  
 
-Deste modo, analisámos as seguintes variáveis:
-- *Peso*: variável quantitativa contínua
-- *Sexo*: variável qualitativa nominal (binomial)
-- *Raça*: variável qualitativa nominal
-- *Idade*: variável quantitativa contínua
+Deste modo, analisámos as seguintes variáveis:     
+- **Peso**: variável quantitativa contínua  
+- **Sexo**: variável qualitativa nominal (binomial)  
+- **Raça**: variável qualitativa nominal  
+- **Idade**: variável quantitativa contínua  
+
+
+
+
+## **Estatística Descritiva**
+
+#### **Variáveis *Qualitativas**   
+
+**1. Raça**    
+
+```{r include=F}
+Abates_prop_raca <- Abates_peso %>% 
+  group_by(Raca) %>% 
+  summarise(Frequência = n()) %>% 
+  mutate(Proporção= Frequência / sum(Frequência))%>% 
+  mutate(Percentagem = (Frequência / sum(Frequência) * 100) %>% round(3))
+```
+```{r echo=F}
+as.data.frame(Abates_prop_raca)
+```
+
+**2. Sexo**    
+
+```{r include=F}
+Abates_prop_sexo <- Abates_peso %>% 
+  group_by(Sexo) %>% 
+  summarise(Frequência = n()) %>% 
+  mutate(Proporção = Frequência / sum(Frequência))%>% 
+  mutate(Percentagem = (Frequência / sum(Frequência) * 100) %>% round(3))
+```
+```{r echo=F}
+as.data.frame(Abates_prop_sexo)
+```
+
+
+
+#### **Variáveis Quantitativas Contínuas**
+
+**1. Idade**     
+
+```{r include=F}
+stats_idade <- Abates_peso %>% 
+  get_summary_stats(idade_ao_abate)
+Abates_prop_idade <- Abates_peso %>% 
+  group_by(idade_range) %>% 
+  summarise(Frequência = n()) %>% 
+  mutate(Proporção = Frequência / sum(Frequência))%>% 
+  mutate(Percentagem = (Frequência / sum(Frequência) * 100) %>% round(3))
+```
+
+Texto explicativo tabela das stats   
+
+```{r echo=F}
+as.data.frame(stats_idade)
+```
+
+
+Tabela de Contingência
+
+```{r echo=F}
+as.data.frame(Abates_prop_idade)
+```
+
+
+
+
+**2. Peso**
+
+```{r include=F}
+stats_peso <- Abates_peso %>% 
+  get_summary_stats(Peso)
+```
+
+
+
+
+```{r echo=F}
+as.data.frame(stats_peso)
+```
+
+
+
+
+
 
 
 
