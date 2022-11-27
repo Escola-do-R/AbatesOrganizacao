@@ -187,19 +187,19 @@ tabela_PxS <- as.data.frame.matrix(table(Abates_peso$peso_range,Abates_peso$Sexo
 tabela_PxI <- as.data.frame.matrix(table(Abates_peso$peso_range,Abates_peso$idade_range))
 ```
 
-**Peso-Raça**
+**1. Peso-Raça**
 
 ```{r echo=F}
 tabela_PxR
 ```
 
-**Peso-Sexo**
+**2. Peso-Sexo**
 
 ```{r echo=F}
 tabela_PxS
 ```
 
-**Peso-Idade**
+**3. Peso-Idade**
 
 ```{r echo=F}
 tabela_PxI
@@ -208,3 +208,178 @@ tabela_PxI
 
 ##  **Representação gráfica da Análise Descritiva**  
 
+```{r include=F}
+graph_abates_sexo <- Abates_prop_sexo %>%
+  plot_ly(x = ~n, y = ~Sexo, type = 'bar') %>%
+  layout(title = "Abates por Sexo") %>%
+  layout(xaxis = list(title = "Frequência"), yaxis = list(title = "Sexo"))  
+
+graph_abates_raca <- Abates_prop_raca %>% 
+  plot_ly(x = ~n, y = ~Raca, type = 'bar') %>% 
+  layout(title = "Abates por Raça") %>%
+  layout(xaxis = list(title = "Frequência"), yaxis = list(title = "Raça"))  
+
+graph_abates_idade <- Abates_prop_idade %>% 
+  plot_ly(x=~n, y=~idade_range, type="bar") %>%
+  layout(title="Abates por Idade") %>%
+  layout(xaxis = list(title = "Frequência"), yaxis = list(title = "Idade"))  
+
+histo_idade <- Abates_peso %>% 
+  plot_ly(x=~idade_range, type="histogram", color=~idade_range) %>%
+  layout(title="Abates por Idade") %>%
+  layout(xaxis = list(title = "Idade"), yaxis = list(title = "Frequência"))
+histo_idade
+
+graph_abates_peso <- Abates_peso %>% 
+  plot_ly(x=~peso_range, type="histogram", color=~peso_range) %>%
+  layout(title="Abates por Peso") %>%
+  layout(xaxis = list(title = "Peso"), yaxis = list(title = "Frequência"))
+```
+
+**1. Sexo**   
+
+Gráfico de Barras
+
+```{r echo=F}
+graph_abates_sexo
+```
+
+**2. Raça**   
+
+Gráfico de Barras
+
+```{r echo=F}
+graph_abates_raca
+```
+
+**3. Idade**   
+
+Gráfico de Barras
+
+```{r echo=F}
+graph_abates_idade
+```
+
+Histograma
+
+```{r echo=F}
+histo_idade
+```
+
+
+**4. Peso**   
+
+Histograma
+
+```{r echo=F}
+graph_abates_peso
+```
+
+
+##  **Representação gráfica da Análise Estatística**  
+
+**Boxplots**
+
+```{r include=F}
+box_peso_sexo <- Abates_peso %>%
+  plot_ly(y=~Peso, x=~Sexo, type="box", color = ~Sexo) %>%
+  layout(title="Peso ao Abate por Sexo") %>%
+  layout(showlegend = FALSE)
+  
+box_peso_raca <- Abates_peso %>%
+  plot_ly(y=~Raca, x=~Peso, type="box", color = ~Raca)%>% 
+  layout(title="Peso ao Abate por Raça") %>%
+  layout(yaxis = list(title= "Raça")) %>%
+  layout(showlegend = FALSE)
+  
+box_peso_idade <- Abates_peso %>%
+  plot_ly(y=~idade_range, x=~Peso, type="box", color=~idade_range)%>%
+  layout(title="Peso ao Abate por Grupo de Idade")%>%
+  layout(yaxis = list(title= "Idade"))%>%
+  layout(showlegend = FALSE)   
+```
+
+Os seguintes boxplots demonstram as diferenças na distribuição do peso ao abate consoante a variável em estudo.  
+  
+
+```{r echo=F}
+box_peso_idade
+```
+
+   
+```{r echo=F}
+box_peso_raca
+```
+
+   
+
+```{r echo=F}
+box_peso_sexo
+```
+   
+   
+   
+   
+
+
+
+##  **Análise Estatística**    
+
+
+**1. Peso-Idade**  
+
+Tratando-se de duas variáveis quantitativas, quisemos testar primeiro as permissas da ANOVA  
+
+- Homogeneidade: Através do **teste de Levene**, que testa se a variância entre grupos é igual. A hipótese nula é de que a variância É igual; a hipótese alternativa é a de que a variância NÃO é igual. 
+
+```{r echo=F}
+leveneTest(Peso ~ idade_range, data=Abates_peso) 
+```
+
+como Pr<0.05, rejeita-se a hipótese nula, ou seja: a variância NÃO é igual (suportada visualmente pelo boxplot) e não se pode usar a ANOVA.
+   
+   
+- Distribuição normal: Através do **teste de Kolmogorov-Smirnov** (já que n>50). A hipótese nula é a de que a variável tem distribuição normal
+
+```{r echo=F}
+ks.test(Abates_peso$Peso, pnorm)
+ks.test(Abates_peso$idade_ao_abate, pnorm)
+```
+
+Como Pr<0.05, rejeita-se a hipótese nula, ou seja: as variáveis NÃO apresentam distribuição normal e não se pode usar a ANOVA.
+   
+Tivemos então de recorrer a testes não paramétricos;  
+A alternativa teste não paramétrico do One way ANOVA test é o **teste de KRUSKAL-WALLIS** e a alternativa à correlação de pearson é a **correlação de spearman**.
+
+```{r echo=F}
+kruskal.test(Peso ~ idade_ao_abate, data=Abates_peso)
+```
+
+Como p<0.05, rejeita-se a hipótese nula, ou seja: existem diferenças estatisticamente significativas no peso consoante idade.
+
+```{r echo=F}
+cor.test(Abates_peso$Peso, Abates_peso$idade_ao_abate, method = "spearman", exact = FALSE) 
+```
+
+Como p<0.05, rejeita-se a hipótese nula, ou seja: há correlação entre o peso e a idade ao abate.
+
+
+**2. Peso-Raça**  
+
+Tratando-se de uma variável quantitativa e outra qualitativa, quisemos realizar um **teste de qui-quadrado**.
+
+```{r echo=F}
+chisq.test(Abates_peso$peso_range, Abates_peso$Raca)
+```
+
+Como p<0.05, rejeita-se a hipótese nula, ou seja: existe associação estatisticamente significativa entre raça e peso.
+    
+**3. Peso-Sexo**  
+
+Tratando-se de uma variável quantitativa e outra qualitativa, quisemos realizar um **teste de qui-quadrado**.
+
+```{r echo=F}
+chisq.test(Abates_peso$peso_range, Abates_peso$Sexo)
+```
+   
+Como p<0.05, rejeita-se a hipótese nula, ou seja: existe associação estatisticamente significativa entre raça e sexo.

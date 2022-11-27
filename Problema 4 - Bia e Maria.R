@@ -113,6 +113,14 @@ graph_abates_sexo <- Abates_prop_sexo %>%
   layout(xaxis = list(title = "Frequência"), yaxis = list(title = "Sexo"))  
 graph_abates_sexo
 
+pie_abates_sexo <- Abates_prop_sexo %>%
+  plot_ly(labels = ~Sexo, values = ~Percentagem, type = 'pie') %>%
+  layout(title = "Abates por Sexo",
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+pie_abates_sexo ##VAle a pena? 
+
+
 graph_abates_raca <- Abates_prop_raca %>% 
   plot_ly(x = ~n, y = ~Raca, type = 'bar') %>% 
   layout(title = "Abates por Raça") %>%
