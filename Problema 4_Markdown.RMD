@@ -210,17 +210,17 @@ tabela_PxI
 
 ```{r include=F}
 graph_abates_sexo <- Abates_prop_sexo %>%
-  plot_ly(x = ~n, y = ~Sexo, type = 'bar') %>%
+  plot_ly(x = ~Frequência, y = ~Sexo, type = 'bar') %>%
   layout(title = "Abates por Sexo") %>%
   layout(xaxis = list(title = "Frequência"), yaxis = list(title = "Sexo"))  
 
 graph_abates_raca <- Abates_prop_raca %>% 
-  plot_ly(x = ~n, y = ~Raca, type = 'bar') %>% 
+  plot_ly(x = ~Frequência, y = ~Raca, type = 'bar') %>% 
   layout(title = "Abates por Raça") %>%
   layout(xaxis = list(title = "Frequência"), yaxis = list(title = "Raça"))  
 
 graph_abates_idade <- Abates_prop_idade %>% 
-  plot_ly(x=~n, y=~idade_range, type="bar") %>%
+  plot_ly(x=~Frequência, y=~idade_range, type="bar") %>%
   layout(title="Abates por Idade") %>%
   layout(xaxis = list(title = "Frequência"), yaxis = list(title = "Idade"))  
 

@@ -39,9 +39,9 @@ Abates_peso <- select(Abates, Data_abate, Data_nasc, Peso, Raca, Sexo) %>%
 # Raca
 Abates_prop_raca <- Abates_peso %>% 
   group_by(Raca) %>% 
-  summarise(Frequência = n()) %>% 
-  mutate(Proporção= Frequência / sum(Frequência))%>% 
-  mutate(Percentagem = (Frequência / sum(Frequência) * 100) %>% round(3))
+  summarise(Frequencia = n()) %>% 
+  mutate(Proporcao= Frequencia / sum(Frequencia))%>% 
+  mutate(Percentagem = (Frequencia / sum(Frequencia) * 100) %>% round(3))
 
 Freq_abates_raca <- Abates_peso %>% 
   freq_table(Raca)
@@ -49,9 +49,9 @@ Freq_abates_raca <- Abates_peso %>%
 # Sexo
 Abates_prop_sexo <- Abates_peso %>% 
   group_by(Sexo) %>% 
-  summarise(Frequência = n()) %>% 
-  mutate(Proporção = Frequência / sum(Frequência))%>% 
-  mutate(Percentagem = (Frequência / sum(Frequência) * 100) %>% round(3))
+  summarise(Frequencia = n()) %>% 
+  mutate(Proporcao = Frequencia / sum(Frequencia))%>% 
+  mutate(Percentagem = (Frequencia / sum(Frequencia) * 100) %>% round(3))
 
 Freq_abates_sexo <- Abates_peso %>% 
   freq_table(Sexo)
@@ -67,9 +67,9 @@ Abates_peso$idade_range <- cut(Abates_peso$idade_ao_abate, breaks= c(0,1,2,3,4,5
 
 Abates_prop_idade <- Abates_peso %>% 
   group_by(idade_range) %>% 
-  summarise(Frequência = n()) %>% 
-  mutate(Proporção = Frequência / sum(Frequência))%>% 
-  mutate(Percentagem = (Frequência / sum(Frequência) * 100) %>% round(3))
+  summarise(Frequencia = n()) %>% 
+  mutate(Proporcao = Frequencia / sum(Frequencia))%>% 
+  mutate(Percentagem = (Frequencia / sum(Frequencia) * 100) %>% round(3))
 
 Freq_abates_idade <- Abates_peso %>% 
   freq_table(idade_range)
@@ -84,9 +84,9 @@ Abates_peso$peso_range <- cut(Abates_peso$Peso, breaks= c(0,50,100,150,200,250,3
 
 Abates_prop_peso <- Abates_peso %>% 
   group_by(peso_range) %>% 
-  summarise(Frequência = n()) %>% 
-  mutate(Proporção = Frequência / sum(Frequência))%>% 
-  mutate(Percentagem = (Frequência / sum(Frequência) * 100) %>% round(3))
+  summarise(Frequencia = n()) %>% 
+  mutate(Proporcao = Frequencia / sum(Frequencia))%>% 
+  mutate(Percentagem = (Frequencia / sum(Frequencia) * 100) %>% round(3))
 #ou
 Freq_abates_peso <- Abates_peso %>% 
   freq_table(peso_range) %>%
@@ -108,9 +108,9 @@ tabela_PxI
 # REPRESENTAÇÃO GRÁFICA DA ANÁLISE DESCRITIVA
  
 graph_abates_sexo <- Abates_prop_sexo %>%
-  plot_ly(x = ~n, y = ~Sexo, type = 'bar') %>%
+  plot_ly(x = ~Frequencia, y = ~Sexo, type = 'bar') %>%
   layout(title = "Abates por Sexo") %>%
-  layout(xaxis = list(title = "Frequência"), yaxis = list(title = "Sexo"))  
+  layout(xaxis = list(title = "Frequencia"), yaxis = list(title = "Sexo"))  
 graph_abates_sexo
 
 pie_abates_sexo <- Abates_prop_sexo %>%
@@ -122,23 +122,23 @@ pie_abates_sexo ##VAle a pena?
 
 
 graph_abates_raca <- Abates_prop_raca %>% 
-  plot_ly(x = ~n, y = ~Raca, type = 'bar') %>% 
-  layout(title = "Abates por Raça") %>%
-  layout(xaxis = list(title = "Frequência"), yaxis = list(title = "Raça"))  
+  plot_ly(x = ~Frequencia, y = ~Raca, type = 'bar') %>% 
+  layout(title = "Abates por Raca") %>%
+  layout(xaxis = list(title = "Frequencia"), yaxis = list(title = "Raca"))  
 graph_abates_raca
 
 # Fiz um grafico de barras por range de idades (no plotly)
 graph_abates_idade <- Abates_prop_idade %>% 
-  plot_ly(x=~n, y=~idade_range, type="bar") %>%
+  plot_ly(x=~Frequencia, y=~idade_range, type="bar") %>%
   layout(title="Abates por Idade") %>%
-  layout(xaxis = list(title = "Frequência"), yaxis = list(title = "Idade"))  
+  layout(xaxis = list(title = "Frequencia"), yaxis = list(title = "Idade"))  
 graph_abates_idade
 
 #Histograma idades
 histo_idade <- Abates_peso %>% 
   plot_ly(x=~idade_range, type="histogram") %>%
   layout(title="Abates por Idade") %>%
-  layout(xaxis = list(title = "Idade"), yaxis = list(title = "Frequência"))
+  layout(xaxis = list(title = "Idade"), yaxis = list(title = "Frequencia"))
 histo_idade
 
 #grafico plotly para as ranges de peso
