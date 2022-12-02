@@ -65,7 +65,8 @@ graph_abates_class_GR
 # Analise estatistica das variaveis
 # Sao todas variaveis qualitativas, portanto vai tudo corrido a teste chi quadrado
 
-x_Raca_abate<- chisq.test(abates1$Raca, abates1$Tipo_abate) #<0.05 portanto significancia
-x_Raca_CT<-chisq.test(abates1$Raca, abates1$MMA_CLA_CAR_CT)#<0.05 portanto significancia
-x_Raca_CF<-chisq.test(abates1$Raca, abates1$MMA_CLA_CAR_CF)#<0.05 portanto significancia
-x_Raca_GR<-chisq.test(abates1$Raca, abates1$MMA_CLA_CAR_GR)#<0.05 portanto significancia
+x_Raca_abate<- chisq.test(abates1$Raca, abates1$Tipo_abate, simulate.p.value = TRUE) #<0.05 portanto significancia
+x_Raca_CT<-chisq.test(abates1$Raca, abates1$MMA_CLA_CAR_CT, simulate.p.value = TRUE)#<0.05 portanto significancia
+x_Raca_CF<-chisq.test(abates1$Raca, abates1$MMA_CLA_CAR_CF, simulate.p.value = TRUE)#<0.05 portanto significancia
+x_Raca_GR<-chisq.test(abates1$Raca, abates1$MMA_CLA_CAR_GR, simulate.p.value = TRUE)#<0.05 portanto significancia
+
