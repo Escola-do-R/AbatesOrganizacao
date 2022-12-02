@@ -47,19 +47,19 @@ graph_abates_tipo <- Freq_Tipo %>%
 graph_abates_class_CT <- Freq_CT %>%
   plot_ly(x = ~n, y = ~cat, type = 'bar') %>%
   layout(title = "Classificacao da carcaca") %>%
-  layout(xaxis = list(title = "Frequencia"), yaxis = list(title = "Classificacao")) 
+  layout(xaxis = list(title = "Frequencia"), yaxis = list(title = "Classificacao CT")) 
 graph_abates_class_CT 
 
 graph_abates_class_CF <- Freq_CF %>%
   plot_ly(x = ~n, y = ~cat, type = 'bar') %>%
   layout(title = "Classificacao da carcaca") %>%
-  layout(xaxis = list(title = "Frequencia"), yaxis = list(title = "Classificacao"))
+  layout(xaxis = list(title = "Frequencia"), yaxis = list(title = "Classificacao CF"))
 graph_abates_class_CF
 
 graph_abates_class_GR <- Freq_GR %>%
   plot_ly(x = ~n, y = ~cat, type = 'bar') %>%
   layout(title = "Classificacao da carcaca") %>%
-  layout(xaxis = list(title = "Frequencia"), yaxis = list(title = "Classificacao"))
+  layout(xaxis = list(title = "Frequencia"), yaxis = list(title = "Classificacao GR"))
 graph_abates_class_GR
 
 # Analise estatistica das variaveis
