@@ -62,7 +62,19 @@ graph_abates_matadouro_raca <- plot_ly(data = tab_raca_matadouro, x = ~Matadouro
 
 graph_abates_matadouro_raca
 
-# First try ANOVA
-
-model <- aov(Raca ~ Tipo_abate, data = Abates1)
+# First try ANOVA -> acho que vamos cagar nisto 
+# model <- aov(Raca ~ Tipo_abate, data = Abates1)
  
+# Chi square independence test
+
+tab_raca_tipoabate <- tabyl(Abates1, Raca, Tipo_abate)
+
+chisq_raca_tipoabate <- chisq.test(tab_raca_tipoabate)
+chisq_raca_tipoabate
+# Temos aviso de aproximacao incorreta e isso tem a ver com freq inferior a 5(?)
+
+# Para contornar podemos usar o Fishert exact test
+
+fisher_raca_tipoabate <- fisher.test(tab_raca_tipoabate)
+# Error in stats::fisher.test(., ...) : FEXACT error 40. Out of workspace. 
+# Nao encontro respostas a isto online
