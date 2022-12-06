@@ -73,8 +73,15 @@ chisq_raca_tipoabate <- chisq.test(tab_raca_tipoabate)
 chisq_raca_tipoabate
 # Temos aviso de aproximacao incorreta e isso tem a ver com freq inferior a 5(?)
 
-# Para contornar podemos usar o Fishert exact test
+# Para contornar podemos usar o Fisher exact test
 
 fisher_raca_tipoabate <- fisher.test(tab_raca_tipoabate)
 # Error in stats::fisher.test(., ...) : FEXACT error 40. Out of workspace. 
 # Nao encontro respostas a isto online
+
+# Eploracao com o tipo de abate
+
+tab_exp_tipoabate <- tabyl(Abates1, Exploracao, Tipo_abate)
+
+chisq_exp_tipoabate <- chisq.test(tab_exp_tipoabate)
+chisq_exp_tipoabate
