@@ -85,3 +85,6 @@ tab_exp_tipoabate <- tabyl(Abates1, Exploracao, Tipo_abate)
 
 chisq_exp_tipoabate <- chisq.test(tab_exp_tipoabate)
 chisq_exp_tipoabate
+
+fisher_exp_tipoabate <- fisher.test(tab_exp_tipoabate)
+# Error in stats::fisher.test(., ...) : FEXACT error 40.Out of workspace.
