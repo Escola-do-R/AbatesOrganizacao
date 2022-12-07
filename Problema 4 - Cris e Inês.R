@@ -79,12 +79,13 @@ fisher_raca_tipoabate <- fisher.test(tab_raca_tipoabate)
 # Error in stats::fisher.test(., ...) : FEXACT error 40. Out of workspace. 
 # Nao encontro respostas a isto online
 
-# Eploracao com o tipo de abate
+# Exploracao com o tipo de abate
 
 tab_exp_tipoabate <- tabyl(Abates1, Exploracao, Tipo_abate)
+tab_exp_tipoabate2 <- select(Abates1, Exploracao, Tipo_abate)
 
 chisq_exp_tipoabate <- chisq.test(tab_exp_tipoabate)
 chisq_exp_tipoabate
 
-fisher_exp_tipoabate <- fisher.test(tab_exp_tipoabate)
+fisher_exp_tipoabate <- fisher.test(tab_exp_tipoabate2)
 # Error in stats::fisher.test(., ...) : FEXACT error 40.Out of workspace.
