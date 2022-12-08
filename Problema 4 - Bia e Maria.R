@@ -211,3 +211,7 @@ chisq.test(Abates_peso$peso_range, Abates_peso$Raca) ##na sebenta de biomat diz 
 chisq.test(Abates_peso$peso_range, Abates_peso$Sexo)
 # p<0-05 tambem
 
+
+plot(Peso ~ idade_ao_abate, data=Abates_peso[Abates_peso$idade_ao_abate<2,])
+
+hist(Abates_peso$Peso)
