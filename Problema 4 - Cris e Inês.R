@@ -61,9 +61,6 @@ graph_abates_matadouro_raca <- plot_ly(data = tab_raca_matadouro, x = ~Matadouro
                                        type = 'scatter', mode = 'markers')
 
 graph_abates_matadouro_raca
-
-# First try ANOVA -> acho que vamos cagar nisto 
-# model <- aov(Raca ~ Tipo_abate, data = Abates1)
  
 # Chi square independence test
 
