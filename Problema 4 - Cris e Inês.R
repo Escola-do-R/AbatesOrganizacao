@@ -3,6 +3,10 @@ library(data.table)
 library(plotly)
 library(janitor)
 library(RColorBrewer)
+library(leaflet)
+library(sf)
+library(lubridate)
+library(measurements)
 
 Abates <- fread("./Abates.csv") 
 Abates
@@ -86,3 +90,68 @@ chisq_exp_tipoabate
 
 fisher_exp_tipoabate <- fisher.test(tab_exp_tipoabate2)
 # Error in stats::fisher.test(., ...) : FEXACT error 40.Out of workspace.
+
+# mapa matadouro exploracoes #
+# ficheiros
+mapa_continente <- st_read("Cont_AAD_CAOP2020")
+mapa_continente$geometry <- st_transform(mapa_continente$geometry, "+init=epsg:4326")
+
+Codme <- fread("./Cód_ME_DiCo.csv") %>% unique
+Total_Caract_Expl <- fread("./FicheiroTotalCaracterizacaoExploracoes-2022-10-04.csv")
+# # # # # # # # # # # # # # # # # # # # # # # # 
+
+Abates2 <- select(Abates1, Matadouro, Exploracao)
+names(Abates2)[names(Abates2) == 'Exploracao'] <- 'ME'
+Abates2 <- mutate(Abates2, ME = paste("PT", Abates2$ME, sep = ''))
+
+SantaCarnes <- Abates2[Abates2$Matadouro == "SANTACARNES - COMRCº E INDSTª DE CARNES DE SANTARÉM, SA"] %>% 
+  unique
+Raporal <- Abates2[Abates2$Matadouro == "RAPORAL - RAÇÕES DE PORTUGAL, SA"] %>% unique
+RegMafra <- Abates2[Abates2$Matadouro == "MATADOURO REGIONAL MAFRA"] %>% unique
+
+Codme1 <- select(Codme, ME, DiCoFre)
+Codme1 <- mutate(Codme1, ME = paste("PT", Codme1$ME, sep = '')) #Don't run twice!!
+
+# limpar tabela caracterizacao
+
+# Total_Caract_Expl <- unite(Total_Caract_Expl, "LATITUDE", CEX_GRA_N, CEX_MIN_N, CEX_SEG_N, sep = ' ') %>% 
+#   unite("LONGITUDE", CEX_GRA_W, CEX_MIN_W, CEX_SEG_W, sep = ' ') 
+# 
+# Total_Caract_Expl <- mutate(Total_Caract_Expl, LATITUDE = conv_unit(Total_Caract_Expl$LATITUDE, from = "deg_min_sec", to = "dec_deg")) %>% 
+#   mutate(LONGITUDE = conv_unit(Total_Caract_Expl$LONGITUDE, from = "deg_min_sec", to = "dec_deg"))
+# 
+# Total_Caract_Expl <- mutate(Total_Caract_Expl, LATITUDE = round(as.numeric(Total_Caract_Expl$LATITUDE), digit = 5)) %>% 
+#   mutate(LONGITUDE = round(as.numeric(Total_Caract_Expl$LONGITUDE), digit = 5))
+
+Total_Caract_Expl <- Total_Caract_Expl %>% arrange(desc(DAT_ALT)) %>% distinct(CEX_MAR_EXP, .keep_all = TRUE)
+
+Total_Caract_Expl <- unite(Total_Caract_Expl, "DiCoFre", CEX_COD_DIS, CEX_COD_CON, CEX_COD_FRE, sep = "")
+
+Total_Caract_Expl <- select(Total_Caract_Expl, CEX_MAR_EXP, DiCoFre) %>% unique
+
+names(Total_Caract_Expl)[names(Total_Caract_Expl) == 'CEX_MAR_EXP'] <- 'ME'
+# # # # # # # # # # # # # #
+
+Dados_Exp <- full_join(Codme1, Total_Caract_Expl) %>% unique
+
+SantaCarnes <- left_join(SantaCarnes, Dados_Exp) %>% filter(nchar(DiCoFre) == 6)
+
+Raporal <- left_join(Raporal, Dados_Exp) %>% filter(nchar(DiCoFre) == 6)
+
+RegMafra <- left_join(RegMafra, Dados_Exp) %>% filter(nchar(DiCoFre) == 6)
+
+# mapa Santa Carnes
+mapa_SantaCarnes <- sp::merge(mapa_continente,SantaCarnes, by.x="Dicofre", by.y="DiCoFre")
+
+  # Palete
+SantaCarnes_leaflet <- leaflet(data = mapa_SantaCarnes) %>% 
+  addProviderTiles(providers$CartoDB.DarkMatter) %>%  
+  addPolygons(weight=.75, fillColor = "green", fillOpacity = .7, color = "black", dashArray = "",
+              highlightOptions = highlightOptions(
+                weight = 5,
+                color = "#666",
+                dashArray = "",
+                fillOpacity = 0.7,
+                bringToFront = TRUE))
+
+SantaCarnes_leaflet
