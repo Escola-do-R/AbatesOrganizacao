@@ -214,4 +214,24 @@ chisq.test(Abates_peso$peso_range, Abates_peso$Sexo)
 
 plot(Peso ~ idade_ao_abate, data=Abates_peso[Abates_peso$idade_ao_abate<2,])
 
-hist(Abates_peso$Peso)
+hist(Abates_peso_2$Peso)
+
+
+Abates_peso_2 <- subset(Abates_peso[Abates_peso$idade_ao_abate<2,])
+# Subset com peso >30 pq peso minimo de vitelos ao nascimento
+Abates_peso_2 <- subset(Abates_peso_2[Abates_peso_2$Peso>30,])
+
+# Como nao me lembrava do que era, fiz isto para idade, raca e sexo, mas com o subset de idade <2 e peso >30
+# Nao me perguntes o que esta por aqui feito, eu estou tao confusa como tu confia
+teste <- lm(Peso ~ idade_ao_abate + Raca + Sexo, data=Abates_peso_2)
+summary(teste)
+
+layout(matrix(c(1,2,3,4),2,2)) #Isto era para ter os plots de diagnostico separados (avaliar os pressupostos basicamente)
+# cuidado que tem de se voltar a por o layout como deve ser
+plot(teste)
+
+layout(matrix(c(1,1))) #repor o layout
+
+# Acho que deviamos juntar varias raças pq isto e uma lista enorme de racas diferentes que fica dificil ler
+
+
