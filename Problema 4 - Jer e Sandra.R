@@ -1,4 +1,4 @@
-setwd("C:/Users/jerfr/Desktop/Abates")
+setwd("C:/Users/ASUS/Desktop/Epi/Problema 4 Abates/Abates/Abates Organização")
 library(data.table)
 library(dplyr)
 library(ggplot2)
@@ -20,7 +20,7 @@ Abates_by_Time <- Abates %>%
   as.data.frame() 
 
 Abates_by_Time <- Abates_by_Time %>% 
-  mutate(Month = month(Data_abate), Year = year(Data_abate)) 
+  mutate(Day = day(Data_abate), Month = month(Data_abate), Year = year(Data_abate)) 
 
 Stats <- Abates_by_Time %>%
   group_by(Year,Month) %>% 
@@ -59,7 +59,7 @@ Peso_by_Matadouro_Year <- Peso_by_Matadouro_Year %>%
   na.exclude()
 
 #Visualization
-#Dont work, will come back to it
+#Dont work, will come back to it e VAMOS IGNORAR ;)
 Graph_M_Y <- Peso_by_Matadouro_Year %>% 
   ggplot(aes(fill=Data, x=Matadouro, y=Avg)) +
   geom_bar(position = "dodge", stat = "identity") +
@@ -84,6 +84,21 @@ Peso_by_Expl_Year <- Peso_by_Expl_Year %>%
   group_by(Exploracao, Data) %>% 
   summarise(Avg = mean(Peso)) 
 
-#Visualization  
-  
+#Ver se há Sazonalidade nos abates
+# Inverno: 21/12 - 20/03
+# Primavera: 21/03 - 20/06
+# Verão: 21/06 - 20/09
+# Outono: 21/09 - 20/12 
 
+# Agrupamento por mês e dia
+Stats1 <- Abates_by_Time %>%
+  group_by(Month,Day,Year) %>% 
+  summarise(Avg = mean(numero_abates_data))
+
+ggplot(Stats1, aes(x=factor(Month), y=Avg))+
+  geom_boxplot()+
+  ylab('Média de abates')+
+  xlab('Mês')+
+  theme_bw()
+  
+# Está um gráfico e dá para ver quando há mais abates, podia estar pior ahahah Mas ainda temos de ver se há uma melhor maneira de representar
