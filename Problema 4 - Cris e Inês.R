@@ -96,7 +96,7 @@ fisher_exp_tipoabate <- fisher.test(tab_exp_tipoabate2)
 mapa_continente <- st_read("Cont_AAD_CAOP2020")
 mapa_continente$geometry <- st_transform(mapa_continente$geometry, "+init=epsg:4326")
 
-Codme <- fread("./CÃ³d_ME_DiCo.csv") %>% unique
+Codme <- fread("./Cód_ME_DiCo.csv") %>% unique
 Total_Caract_Expl <- fread("./FicheiroTotalCaracterizacaoExploracoes-2022-10-04.csv")
 # # # # # # # # # # # # # # # # # # # # # # # # 
 
@@ -104,10 +104,9 @@ Abates2 <- select(Abates1, Matadouro, Exploracao)
 names(Abates2)[names(Abates2) == 'Exploracao'] <- 'ME'
 Abates2 <- mutate(Abates2, ME = paste("PT", Abates2$ME, sep = ''))
 
-SantaCarnes <- Abates2[Abates2$Matadouro == "	SANTACARNES - COMRCï¿½ E INDSTï¿½ DE CARNES DE SANTARï¿½M, SA"] %>% 
-  unique
-Raporal <- Abates2[Abates2$Matadouro == "RAPORAL - RA??ES DE PORTUGAL, SA"] %>% unique
-RegMafra <- Abates2[Abates2$Matadouro == "MATADOURO REGIONAL MAFRA"] %>% unique
+SantaCarnes <- Abates2[Abates2$Matadouro == "SANTACARNES - COMRCº E INDSTª DE CARNES DE SANTARÉM, SA"]
+Raporal <- Abates2[Abates2$Matadouro == "RAPORAL - RAÇÕES DE PORTUGAL, SA"]
+RegMafra <- Abates2[Abates2$Matadouro == "MATADOURO REGIONAL MAFRA"]
 
 Codme1 <- select(Codme, ME, DiCoFre)
 Codme1 <- mutate(Codme1, ME = paste("PT", Codme1$ME, sep = '')) #Don't run twice!!
@@ -134,25 +133,115 @@ names(Total_Caract_Expl)[names(Total_Caract_Expl) == 'CEX_MAR_EXP'] <- 'ME'
 
 Dados_Exp <- full_join(Codme1, Total_Caract_Expl) %>% unique
 
-SantaCarnes <- left_join(SantaCarnes, Dados_Exp) %>% filter(nchar(DiCoFre) == 6)
+# SantaCarnes -----------------------------------------------
+SantaCarnes <- group_by(SantaCarnes, ME) %>% count(ME)
+
+SantaCarnes1 <- left_join(SantaCarnes, Dados_Exp) %>% filter(nchar(DiCoFre) == 6)
+
+mapa_SantaCarnes <- sp::merge(mapa_continente,SantaCarnes1, by.x="Dicofre", by.y="DiCoFre")
+
+# cores
+bins_SantaCarnes <- c(0, 10, 40, 100, 500, 1000, 2000, 4000, Inf)
+pal_SantaCarnes <- colorBin("Greens",mapa_SantaCarnes$n, bins_SantaCarnes) 
+
+# texto
+mytext_SantaCarnes <- paste(
+  "<strong>", "Animais: ", "</strong>", mapa_SantaCarnes$n, "<br/>") %>%
+  lapply(htmltools::HTML)
 
 
-Raporal <- left_join(Raporal, Dados_Exp) %>% filter(nchar(DiCoFre) == 6)
+# mapa 
 
-RegMafra <- left_join(RegMafra, Dados_Exp) %>% filter(nchar(DiCoFre) == 6)
-
-# mapa Santa Carnes
-mapa_SantaCarnes <- sp::merge(mapa_continente,SantaCarnes, by.x="Dicofre", by.y="DiCoFre")
-
-  # Palete
 SantaCarnes_leaflet <- leaflet(data = mapa_SantaCarnes) %>% 
   addProviderTiles(providers$CartoDB.DarkMatter) %>%  
-  addPolygons(weight=.75, fillColor = "green", fillOpacity = .7, color = "black", dashArray = "",
+  addPolygons(weight=.75, fillColor = ~pal_SantaCarnes(n), fillOpacity = .7, color = "black", dashArray = "",
+              label = mytext_SantaCarnes, labelOptions = labelOptions( 
+                style = list("font-weight" = "normal", padding = "3px 8px"), 
+                textsize = "13px",direction = "auto"), 
               highlightOptions = highlightOptions(
                 weight = 5,
                 color = "#666",
                 dashArray = "",
                 fillOpacity = 0.7,
-                bringToFront = TRUE))
+                bringToFront = TRUE)) %>% 
+  addLegend(pal = pal_SantaCarnes, values = ~n, opacity = 0.7, title = "Animais Abatidos",
+            position = "bottomright")
 
 SantaCarnes_leaflet
+
+# -----------------------------------------------------------
+
+# Raporal ---------------------------------------------------
+Raporal <- group_by(Raporal, ME) %>% count(ME)
+
+Raporal1 <- left_join(Raporal, Dados_Exp) %>% filter(nchar(DiCoFre) == 6)
+
+mapa_Raporal <- sp::merge(mapa_continente,Raporal1, by.x="Dicofre", by.y="DiCoFre")
+
+# cores
+bins_Raporal <- c(0, 10, 40, 100, 500, 1000, 2000, 4000, Inf)
+pal_Raporal <- colorBin("Greens",mapa_Raporal$n, bins_Raporal) 
+
+# texto
+mytext_Raporal <- paste(
+  "<strong>", "Animais: ", "</strong>", mapa_Raporal$n, "<br/>") %>%
+  lapply(htmltools::HTML)
+
+
+# mapa 
+
+Raporal_leaflet <- leaflet(data = mapa_Raporal) %>% 
+  addProviderTiles(providers$CartoDB.DarkMatter) %>%  
+  addPolygons(weight=.75, fillColor = ~pal_Raporal(n), fillOpacity = .7, color = "black", dashArray = "",
+              label = mytext_Raporal, labelOptions = labelOptions( 
+                style = list("font-weight" = "normal", padding = "3px 8px"), 
+                textsize = "13px",direction = "auto"), 
+              highlightOptions = highlightOptions(
+                weight = 5,
+                color = "#666",
+                dashArray = "",
+                fillOpacity = 0.7,
+                bringToFront = TRUE)) %>% 
+  addLegend(pal = pal_Raporal, values = ~n, opacity = 0.7, title = "Animais Abatidos",
+            position = "bottomright")
+
+Raporal_leaflet
+# -----------------------------------------------------------
+
+# Regional Mafra --------------------------------------------
+RegMafra <- group_by(RegMafra, ME) %>% count(ME)
+
+RegMafra1 <- left_join(RegMafra, Dados_Exp) %>% filter(nchar(DiCoFre) == 6)
+
+mapa_RegMafra <- sp::merge(mapa_continente,RegMafra1, by.x="Dicofre", by.y="DiCoFre")
+
+# cores
+bins_RegMafra <- c(0, 10, 40, 100, 500, 1000, 1500, 2000, Inf)
+pal_RegMafra <- colorBin("Greens",mapa_RegMafra$n, bins_RegMafra) 
+
+# texto
+mytext_RegMafra <- paste(
+  "<strong>", "Animais: ", "</strong>", mapa_RegMafra$n, "<br/>") %>%
+  lapply(htmltools::HTML)
+
+
+# mapa 
+
+RegMafra_leaflet <- leaflet(data = mapa_RegMafra) %>% 
+  addProviderTiles(providers$CartoDB.DarkMatter) %>%  
+  addPolygons(weight=.75, fillColor = ~pal_RegMafra(n), fillOpacity = .7, color = "black", dashArray = "",
+              label = mytext_RegMafra, labelOptions = labelOptions( 
+                style = list("font-weight" = "normal", padding = "3px 8px"), 
+                textsize = "13px",direction = "auto"), 
+              highlightOptions = highlightOptions(
+                weight = 5,
+                color = "#666",
+                dashArray = "",
+                fillOpacity = 0.7,
+                bringToFront = TRUE)) %>% 
+  addLegend(pal = pal_RegMafra, values = ~n, opacity = 0.7, title = "Animais Abatidos",
+            position = "bottomright")
+
+RegMafra_leaflet
+
+# ------------------------------------------------
