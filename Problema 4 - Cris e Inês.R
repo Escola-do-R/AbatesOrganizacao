@@ -96,7 +96,7 @@ fisher_exp_tipoabate <- fisher.test(tab_exp_tipoabate2)
 mapa_continente <- st_read("Cont_AAD_CAOP2020")
 mapa_continente$geometry <- st_transform(mapa_continente$geometry, "+init=epsg:4326")
 
-Codme <- fread("./Cód_ME_DiCo.csv") %>% unique
+Codme <- fread("./CÃ³d_ME_DiCo.csv") %>% unique
 Total_Caract_Expl <- fread("./FicheiroTotalCaracterizacaoExploracoes-2022-10-04.csv")
 # # # # # # # # # # # # # # # # # # # # # # # # 
 
@@ -104,9 +104,9 @@ Abates2 <- select(Abates1, Matadouro, Exploracao)
 names(Abates2)[names(Abates2) == 'Exploracao'] <- 'ME'
 Abates2 <- mutate(Abates2, ME = paste("PT", Abates2$ME, sep = ''))
 
-SantaCarnes <- Abates2[Abates2$Matadouro == "SANTACARNES - COMRCº E INDSTª DE CARNES DE SANTARÉM, SA"] %>% 
+SantaCarnes <- Abates2[Abates2$Matadouro == "	SANTACARNES - COMRCï¿½ E INDSTï¿½ DE CARNES DE SANTARï¿½M, SA"] %>% 
   unique
-Raporal <- Abates2[Abates2$Matadouro == "RAPORAL - RAÇÕES DE PORTUGAL, SA"] %>% unique
+Raporal <- Abates2[Abates2$Matadouro == "RAPORAL - RA??ES DE PORTUGAL, SA"] %>% unique
 RegMafra <- Abates2[Abates2$Matadouro == "MATADOURO REGIONAL MAFRA"] %>% unique
 
 Codme1 <- select(Codme, ME, DiCoFre)
@@ -135,6 +135,7 @@ names(Total_Caract_Expl)[names(Total_Caract_Expl) == 'CEX_MAR_EXP'] <- 'ME'
 Dados_Exp <- full_join(Codme1, Total_Caract_Expl) %>% unique
 
 SantaCarnes <- left_join(SantaCarnes, Dados_Exp) %>% filter(nchar(DiCoFre) == 6)
+
 
 Raporal <- left_join(Raporal, Dados_Exp) %>% filter(nchar(DiCoFre) == 6)
 
