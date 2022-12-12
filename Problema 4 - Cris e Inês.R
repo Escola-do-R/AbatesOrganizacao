@@ -98,6 +98,7 @@ mapa_continente$geometry <- st_transform(mapa_continente$geometry, "+init=epsg:4
 
 Codme <- fread("./C�d_ME_DiCo.csv") %>% unique
 Total_Caract_Expl <- fread("./FicheiroTotalCaracterizacaoExploracoes-2022-10-04.csv")
+Freguesias <- fread("./Correspond�ncias freg 2013-14.csv")
 # # # # # # # # # # # # # # # # # # # # # # # # 
 
 Abates2 <- select(Abates1, Matadouro, Exploracao)
@@ -111,16 +112,9 @@ RegMafra <- Abates2[Abates2$Matadouro == "MATADOURO REGIONAL MAFRA"]
 Codme1 <- select(Codme, ME, DiCoFre)
 Codme1 <- mutate(Codme1, ME = paste("PT", Codme1$ME, sep = '')) #Don't run twice!!
 
-# limpar tabela caracterizacao
+Freguesias1 <- select(Freguesias, DiCoFre, `Freguesias - Reorganização de 2013`)
 
-# Total_Caract_Expl <- unite(Total_Caract_Expl, "LATITUDE", CEX_GRA_N, CEX_MIN_N, CEX_SEG_N, sep = ' ') %>% 
-#   unite("LONGITUDE", CEX_GRA_W, CEX_MIN_W, CEX_SEG_W, sep = ' ') 
-# 
-# Total_Caract_Expl <- mutate(Total_Caract_Expl, LATITUDE = conv_unit(Total_Caract_Expl$LATITUDE, from = "deg_min_sec", to = "dec_deg")) %>% 
-#   mutate(LONGITUDE = conv_unit(Total_Caract_Expl$LONGITUDE, from = "deg_min_sec", to = "dec_deg"))
-# 
-# Total_Caract_Expl <- mutate(Total_Caract_Expl, LATITUDE = round(as.numeric(Total_Caract_Expl$LATITUDE), digit = 5)) %>% 
-#   mutate(LONGITUDE = round(as.numeric(Total_Caract_Expl$LONGITUDE), digit = 5))
+# limpar tabela caracterizacao
 
 Total_Caract_Expl <- Total_Caract_Expl %>% arrange(desc(DAT_ALT)) %>% distinct(CEX_MAR_EXP, .keep_all = TRUE)
 
@@ -132,6 +126,7 @@ names(Total_Caract_Expl)[names(Total_Caract_Expl) == 'CEX_MAR_EXP'] <- 'ME'
 # # # # # # # # # # # # # #
 
 Dados_Exp <- full_join(Codme1, Total_Caract_Expl) %>% unique
+Dados_Exp <- left_join(Dados_Exp, Freguesias1)
 
 # SantaCarnes -----------------------------------------------
 SantaCarnes <- group_by(SantaCarnes, ME) %>% count(ME)
@@ -146,6 +141,7 @@ pal_SantaCarnes <- colorBin("Greens",mapa_SantaCarnes$n, bins_SantaCarnes)
 
 # texto
 mytext_SantaCarnes <- paste(
+  "<strong>", "Freguesia: ", "</strong>", mapa_SantaCarnes$`Freguesias - Reorganização de 2013`, "<br/>",
   "<strong>", "Animais: ", "</strong>", mapa_SantaCarnes$n, "<br/>") %>%
   lapply(htmltools::HTML)
 
@@ -184,6 +180,7 @@ pal_Raporal <- colorBin("Greens",mapa_Raporal$n, bins_Raporal)
 
 # texto
 mytext_Raporal <- paste(
+  "<strong>", "Freguesia: ", "</strong>", mapa_Raporal$`Freguesias - Reorganização de 2013`, "<br/>",
   "<strong>", "Animais: ", "</strong>", mapa_Raporal$n, "<br/>") %>%
   lapply(htmltools::HTML)
 
@@ -221,6 +218,7 @@ pal_RegMafra <- colorBin("Greens",mapa_RegMafra$n, bins_RegMafra)
 
 # texto
 mytext_RegMafra <- paste(
+  "<strong>", "Freguesia: ", "</strong>", mapa_RegMafra$`Freguesias - Reorganização de 2013`, "<br/>",
   "<strong>", "Animais: ", "</strong>", mapa_RegMafra$n, "<br/>") %>%
   lapply(htmltools::HTML)
 
