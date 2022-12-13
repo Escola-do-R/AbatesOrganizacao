@@ -1,4 +1,4 @@
-setwd("C:/Users/ASUS/Desktop/Epi/Problema 4 Abates/Abates/Abates Organização")
+setwd("C:/Users/ASUS/Desktop/Epi/Problema 4 Abates/Abates/Abates Organizacao")
 library(data.table)
 library(dplyr)
 library(ggplot2)
@@ -102,3 +102,18 @@ ggplot(Stats1, aes(x=factor(Month), y=Avg))+
   theme_bw()
   
 # Está um gráfico e dá para ver quando há mais abates, podia estar pior ahahah Mas ainda temos de ver se há uma melhor maneira de representar
+
+# Passando para o segundo objetivo
+# Relacionar abates com a exportação do INE
+
+Dados_exportações <- fread("C:/Users/ASUS/Desktop/Epi/Problema 4 Abates/Abates/Abates Organizacao/Dados_INE_2013_2017.csv", encoding = "UTF-8") 
+
+Dados_exportações <- Dados_exportações[c(8,13),]
+
+months <- c("Janeiro","Fevereiro", "Março", "Abril","Maio","Junho", "Julho", "Agosto", "Setemnro", "Outubro", "Novembro", "Dezembro")
+
+y <- as.integer(factor(months, levels = month.name)) %>% na.omit(months) %>% na.action(months)
+
+Datas_titulos <- Dados_exportações[c(1),]
+
+#Estou e tentar converter a data em números eu sei que já fizemos isto, mas está complicado 
