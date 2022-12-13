@@ -233,7 +233,7 @@ plot(teste) #plots de diagnostico de assumptions
 layout(matrix(c(1,1))) #repor o layout
 
 # agr para dar plot mesmo acho que e isto
-ggplot(Abates_peso_2, aes(x = idade_ao_abate_dias, y = Peso, shape=Raca_)) +
+ggplot(Abates_peso_2, aes(x = idade_ao_abate_dias, y = Peso, shape=Raca)) +
   geom_point() +
   geom_smooth(method=lm,se=FALSE,fullrange=TRUE,
               aes(color=Raca))
