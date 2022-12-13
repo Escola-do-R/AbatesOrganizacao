@@ -4,6 +4,7 @@ library(lubridate)
 library(freqtables)
 library(plotly)
 library(rstatix)
+library(ggplot2)
 
 Abates <- fread("./Abates.csv") 
 
@@ -27,6 +28,7 @@ Abates <- fread("./Abates.csv")
 Abates_peso <- select(Abates, Data_abate, Data_nasc, Peso, Raca, Sexo) %>% 
   mutate(
     idade_ao_abate= round ((Data_nasc %--% Data_abate) / years(1),1),
+    idade_ao_abate_dias= (Data_nasc %--% Data_abate) / days(1),
     Peso = as.numeric(str_replace(Peso, ",", ".")),
     ) %>% 
   mutate(Raca = (str_replace(Raca,c("<",">"),"")))
@@ -214,21 +216,25 @@ chisq.test(Abates_peso$peso_range, Abates_peso$Sexo)
 
 plot(Peso ~ idade_ao_abate, data=Abates_peso[Abates_peso$idade_ao_abate<2,])
 
-hist(Abates_peso_2$Peso)
-
 
 Abates_peso_2 <- subset(Abates_peso[Abates_peso$idade_ao_abate<2,])
 # Subset com peso >30 pq peso minimo de vitelos ao nascimento
 Abates_peso_2 <- subset(Abates_peso_2[Abates_peso_2$Peso>30,])
 
-# Como nao me lembrava do que era, fiz isto para idade, raca e sexo, mas com o subset de idade <2 e peso >30
+# Como nao me lembrava do que era, fiz isto para idade e raca, mas com o subset de idade <2 e peso >30
 # Nao me perguntes o que esta por aqui feito, eu estou tao confusa como tu confia
-teste <- lm(Peso ~ idade_ao_abate + Raca + Sexo, data=Abates_peso_2)
+teste <- lm(Peso ~ idade_ao_abate_dias + Raca, data=Abates_peso_2)
 summary(teste)
 
 layout(matrix(c(1,2,3,4),2,2)) #Isto era para ter os plots de diagnostico separados (avaliar os pressupostos basicamente)
 # cuidado que tem de se voltar a por o layout como deve ser
-plot(teste)
+plot(teste) #plots de diagnostico de assumptions
+
+# agr para dar plot mesmo acho que e isto
+ggplot(Abates_peso_2, aes(x = idade_ao_abate_dias, y = Peso)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+
 
 layout(matrix(c(1,1))) #repor o layout
 
