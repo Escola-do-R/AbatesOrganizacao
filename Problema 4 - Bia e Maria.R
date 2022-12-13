@@ -25,11 +25,16 @@ Abates <- fread("./Abates.csv")
 # Assim, vou selecionar as colunas que me interessam e garantir que sao da classe certa
 # Calculei idade ao abate usando funcao do lubridate %--% e arredondei a 1 casa decimal
 # Peso convertido a numerico, necessario substituir as , por .
+# Queria agrupar as racas por carne e leite para ser mais facil de ter um grafico facil de ler mas tou meio presa
+carne<- c("CARNE, IND.| CRUZADO CHAROL�S|CRUZADO DE CARNE|MERTOLENGA|RUZADO LIMOUSINE|CHAROLESA|CRUZADO BBB | CRUZADO DE BLONDE|LIMOUSINE|ALENTEJANA|CRUZADO SIMMENTAL-FLECKVIEH")
+leite<- c("FRISIA|Tipo Fr�sia|LEITE, IND.")
 Abates_peso <- select(Abates, Data_abate, Data_nasc, Peso, Raca, Sexo) %>% 
   mutate(
     idade_ao_abate= round ((Data_nasc %--% Data_abate) / years(1),1),
     idade_ao_abate_dias= (Data_nasc %--% Data_abate) / days(1),
     Peso = as.numeric(str_replace(Peso, ",", ".")),
+    Raca_agrupada = str_replace(Raca, carne, "Carne"),
+    Raca_agrupada = str_replace(Raca, leite, "Leite")
   ) %>% 
   mutate(Raca = (str_replace(Raca,c("<",">"),"")))
 
@@ -233,23 +238,9 @@ plot(teste) #plots de diagnostico de assumptions
 layout(matrix(c(1,1))) #repor o layout
 
 # agr para dar plot mesmo acho que e isto
-ggplot(Abates_peso_2, aes(x = idade_ao_abate_dias, y = Peso, shape=Raca)) +
+ggplot(Abates_peso_2, aes(x = idade_ao_abate_dias, y = Peso, shape=Raca_agrupada)) +
   geom_point() +
   geom_smooth(method=lm,se=FALSE,fullrange=TRUE,
-              aes(color=Raca))
-
-
-# Queria agrupar as racas por carne e leite para ser mais facil de ter um grafico facil de ler mas tou meio presa
-carne<- c("CARNE, IND.", "CRUZADO CHAROL�S" ,"CRUZADO DE CARNE", "MERTOLENGA", "CRUZADO LIMOUSINE", "CHAROLESA", "CRUZADO BBB", "CRUZADO DE BLONDE", "LIMOUSINE", "ALENTEJANA","CRUZADO SIMMENTAL-FLECKVIEH")
-leite<- c("FRISIA", "Tipo Fr�sia" , "LEITE, IND.")
-
-Abates_peso_2 <- mutate(
-  Raca_agrupada = str_replace(Abates_peso_2, carne, "Carne"),
-  Raca_agrupada = str_replace(Abates_peso_2, leite, "Leite")
-)
-
-
-
-# Acho que deviamos juntar varias raças pq isto e uma lista enorme de racas diferentes que fica dificil ler
+              aes(color=Raca_agrupada))
 
 
