@@ -4,6 +4,7 @@ library(lubridate)
 library(freqtables)
 library(plotly)
 library(rstatix)
+library(ggplot2)
 
 Abates <- fread("./Abates.csv") 
 
@@ -24,11 +25,17 @@ Abates <- fread("./Abates.csv")
 # Assim, vou selecionar as colunas que me interessam e garantir que sao da classe certa
 # Calculei idade ao abate usando funcao do lubridate %--% e arredondei a 1 casa decimal
 # Peso convertido a numerico, necessario substituir as , por .
+# Queria agrupar as racas por carne e leite para ser mais facil de ter um grafico facil de ler mas tou meio presa
+carne<- c("CARNE, IND.| CRUZADO CHAROL�S|CRUZADO DE CARNE|MERTOLENGA|RUZADO LIMOUSINE|CHAROLESA|CRUZADO BBB | CRUZADO DE BLONDE|LIMOUSINE|ALENTEJANA|CRUZADO SIMMENTAL-FLECKVIEH")
+leite<- c("FRISIA|Tipo Fr�sia|LEITE, IND.")
 Abates_peso <- select(Abates, Data_abate, Data_nasc, Peso, Raca, Sexo) %>% 
   mutate(
     idade_ao_abate= round ((Data_nasc %--% Data_abate) / years(1),1),
+    idade_ao_abate_dias= (Data_nasc %--% Data_abate) / days(1),
     Peso = as.numeric(str_replace(Peso, ",", ".")),
-    ) %>% 
+    Raca_agrupada = str_replace(Raca, carne, "Carne"),
+    Raca_agrupada = str_replace(Raca, leite, "Leite")
+  ) %>% 
   mutate(Raca = (str_replace(Raca,c("<",">"),"")))
 
 ##ESTATÍSTICA DESCRITIVA
@@ -124,7 +131,7 @@ pie_abates_sexo ##VAle a pena?
 graph_abates_raca <- Abates_prop_raca %>% 
   plot_ly(x = ~Frequencia, y = ~Raca, type = 'bar') %>% 
   layout(title = "Abates por Raca") %>%
-  layout(xaxis = list(title = "Frequencia"), yaxis = list(title = "Raca"))  
+  layout(xaxis = list(title = "Frequencia"), yaxis = list(title = "Raca"))
 graph_abates_raca
 
 # Fiz um grafico de barras por range de idades (no plotly)
@@ -214,24 +221,26 @@ chisq.test(Abates_peso$peso_range, Abates_peso$Sexo)
 
 plot(Peso ~ idade_ao_abate, data=Abates_peso[Abates_peso$idade_ao_abate<2,])
 
-hist(Abates_peso_2$Peso)
-
 
 Abates_peso_2 <- subset(Abates_peso[Abates_peso$idade_ao_abate<2,])
 # Subset com peso >30 pq peso minimo de vitelos ao nascimento
 Abates_peso_2 <- subset(Abates_peso_2[Abates_peso_2$Peso>30,])
 
-# Como nao me lembrava do que era, fiz isto para idade, raca e sexo, mas com o subset de idade <2 e peso >30
+# Como nao me lembrava do que era, fiz isto para idade e raca, mas com o subset de idade <2 e peso >30
 # Nao me perguntes o que esta por aqui feito, eu estou tao confusa como tu confia
-teste <- lm(Peso ~ idade_ao_abate + Raca + Sexo, data=Abates_peso_2)
+teste <- lm(Peso ~ idade_ao_abate_dias + Raca, data=Abates_peso_2)
 summary(teste)
 
 layout(matrix(c(1,2,3,4),2,2)) #Isto era para ter os plots de diagnostico separados (avaliar os pressupostos basicamente)
 # cuidado que tem de se voltar a por o layout como deve ser
-plot(teste)
+plot(teste) #plots de diagnostico de assumptions
 
 layout(matrix(c(1,1))) #repor o layout
 
-# Acho que deviamos juntar varias raças pq isto e uma lista enorme de racas diferentes que fica dificil ler
+# agr para dar plot mesmo acho que e isto
+ggplot(Abates_peso_2, aes(x = idade_ao_abate_dias, y = Peso, shape=Raca_agrupada)) +
+  geom_point() +
+  geom_smooth(method=lm,se=FALSE,fullrange=TRUE,
+              aes(color=Raca_agrupada))
 
 
