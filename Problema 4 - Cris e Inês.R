@@ -70,13 +70,13 @@ graph_abates_matadouro_raca
 
 tab_raca_tipoabate <- tabyl(Abates1, Raca, Tipo_abate)
 
-chisq_raca_tipoabate <- chisq.test(tab_raca_tipoabate)
-chisq_raca_tipoabate
+# chisq_raca_tipoabate <- chisq.test(tab_raca_tipoabate)
+# chisq_raca_tipoabate
 # Temos aviso de aproximacao incorreta e isso tem a ver com freq inferior a 5(?)
 
 # Para contornar podemos usar o Fisher exact test
 
-fisher_raca_tipoabate <- fisher.test(tab_raca_tipoabate)
+# fisher_raca_tipoabate <- fisher.test(tab_raca_tipoabate)
 # Error in stats::fisher.test(., ...) : FEXACT error 40. Out of workspace. 
 # Nao encontro respostas a isto online
 
@@ -85,10 +85,10 @@ fisher_raca_tipoabate <- fisher.test(tab_raca_tipoabate)
 tab_exp_tipoabate <- tabyl(Abates1, Exploracao, Tipo_abate)
 tab_exp_tipoabate2 <- select(Abates1, Exploracao, Tipo_abate)
 
-chisq_exp_tipoabate <- chisq.test(tab_exp_tipoabate)
-chisq_exp_tipoabate
+# chisq_exp_tipoabate <- chisq.test(tab_exp_tipoabate)
+# chisq_exp_tipoabate
 
-fisher_exp_tipoabate <- fisher.test(tab_exp_tipoabate2)
+# fisher_exp_tipoabate <- fisher.test(tab_exp_tipoabate2)
 # Error in stats::fisher.test(., ...) : FEXACT error 40.Out of workspace.
 
 # mapa matadouro exploracoes #
@@ -96,23 +96,23 @@ fisher_exp_tipoabate <- fisher.test(tab_exp_tipoabate2)
 mapa_continente <- st_read("Cont_AAD_CAOP2020")
 mapa_continente$geometry <- st_transform(mapa_continente$geometry, "+init=epsg:4326")
 
-Codme <- fread("./C�d_ME_DiCo.csv") %>% unique
+Codme <- fread("./Cód_ME_DiCo.csv") %>% unique
 Total_Caract_Expl <- fread("./FicheiroTotalCaracterizacaoExploracoes-2022-10-04.csv")
-Freguesias <- fread("./Correspond�ncias freg 2013-14.csv")
+Freguesias <- fread("./Correspondências freg 2013-14.csv")
 # # # # # # # # # # # # # # # # # # # # # # # # 
 
 Abates2 <- select(Abates1, Matadouro, Exploracao)
 names(Abates2)[names(Abates2) == 'Exploracao'] <- 'ME'
 Abates2 <- mutate(Abates2, ME = paste("PT", Abates2$ME, sep = ''))
 
-SantaCarnes <- Abates2[Abates2$Matadouro == "SANTACARNES - COMRC� E INDST� DE CARNES DE SANTAR�M, SA"]
-Raporal <- Abates2[Abates2$Matadouro == "RAPORAL - RA��ES DE PORTUGAL, SA"]
+SantaCarnes <- Abates2[Abates2$Matadouro == "SANTACARNES - COMRCº E INDSTª DE CARNES DE SANTARÉM, SA"]
+Raporal <- Abates2[Abates2$Matadouro == "RAPORAL - RAÇÕES DE PORTUGAL, SA"]
 RegMafra <- Abates2[Abates2$Matadouro == "MATADOURO REGIONAL MAFRA"]
 
 Codme1 <- select(Codme, ME, DiCoFre)
 Codme1 <- mutate(Codme1, ME = paste("PT", Codme1$ME, sep = '')) #Don't run twice!!
 
-Freguesias1 <- select(Freguesias, DiCoFre, `Freguesias - Reorganização de 2013`)
+Freguesias1 <- select(Freguesias, DiCoFre, `Freguesias - ReorganizaÃ§Ã£o de 2013`)
 
 # limpar tabela caracterizacao
 
@@ -141,7 +141,7 @@ pal_SantaCarnes <- colorBin("Greens",mapa_SantaCarnes$n, bins_SantaCarnes)
 
 # texto
 mytext_SantaCarnes <- paste(
-  "<strong>", "Freguesia: ", "</strong>", mapa_SantaCarnes$`Freguesias - Reorganização de 2013`, "<br/>",
+  "<strong>", "Freguesia: ", "</strong>", mapa_SantaCarnes$`Freguesias - ReorganizaÃ§Ã£o de 2013`, "<br/>",
   "<strong>", "Animais: ", "</strong>", mapa_SantaCarnes$n, "<br/>") %>%
   lapply(htmltools::HTML)
 
@@ -180,7 +180,7 @@ pal_Raporal <- colorBin("Greens",mapa_Raporal$n, bins_Raporal)
 
 # texto
 mytext_Raporal <- paste(
-  "<strong>", "Freguesia: ", "</strong>", mapa_Raporal$`Freguesias - Reorganização de 2013`, "<br/>",
+  "<strong>", "Freguesia: ", "</strong>", mapa_Raporal$`Freguesias - ReorganizaÃ§Ã£o de 2013`, "<br/>",
   "<strong>", "Animais: ", "</strong>", mapa_Raporal$n, "<br/>") %>%
   lapply(htmltools::HTML)
 
@@ -218,7 +218,7 @@ pal_RegMafra <- colorBin("Greens",mapa_RegMafra$n, bins_RegMafra)
 
 # texto
 mytext_RegMafra <- paste(
-  "<strong>", "Freguesia: ", "</strong>", mapa_RegMafra$`Freguesias - Reorganização de 2013`, "<br/>",
+  "<strong>", "Freguesia: ", "</strong>", mapa_RegMafra$`Freguesias - ReorganizaÃ§Ã£o de 2013`, "<br/>",
   "<strong>", "Animais: ", "</strong>", mapa_RegMafra$n, "<br/>") %>%
   lapply(htmltools::HTML)
 
