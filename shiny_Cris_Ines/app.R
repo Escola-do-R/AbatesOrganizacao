@@ -1,5 +1,3 @@
-setwd("C:/Users/Ines_/OneDrive/Documentos/estagio/Pre-Estagio/shiny/census-app")
-
 library(shiny)
 library(maps)
 library(mapproj)
@@ -11,22 +9,22 @@ percent_map(counties$white, "darkgreen", "% White")
 
 # User interface ----
 ui <- fluidPage(
-  titlePanel("censusVis"),
+  titlePanel("Mapas Top3 Matadouros PT"),
   
   sidebarLayout(
     sidebarPanel(
-      helpText("Create demographic maps with 
-        information from the 2010 US Census."),
+      helpText("Representação geográfica da área de captação dos principais
+               matadouros portugueses."),
       
       selectInput("var", 
-                  label = "Choose a variable to display",
-                  choices = c("Percent White", "Percent Black",
-                              "Percent Hispanic", "Percent Asian"),
-                  selected = "Percent White"),
+                  label = "Escolha o matadouro pretendido:",
+                  choices = c("Santa Carnes", "Raporal",
+                              "Matadouro Regional de Mafra"),
+                  selected = "Santa Carnes"),
       
       sliderInput("range", 
                   label = "Range of interest:",
-                  min = 0, max = 100, value = c(0, 100))
+                  min = 0, max = Inf, value = c(0, Inf))
     ),
     
     mainPanel(plotOutput("map"))
