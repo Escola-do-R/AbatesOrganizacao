@@ -205,7 +205,7 @@ ks.test(Abates_peso$idade_ao_abate, pnorm)
 
 kruskal.test(Peso ~ idade_ao_abate, data=Abates_peso)
 # Ora isto deu p<0.05, significando que rejeitas H0 e portanto temos diferencas estatisticamente significativas no peso consoante idade (previsivel)
-cor.test(Abates_peso$Peso, Abates_peso$idade_ao_abate, method = "spearman", exact = FALSE) #dava um erro, na net resolvia-se com o exact=FALSE; na prática, deu o mesmo resultado
+cor.test(Abates_peso$Peso, Abates_peso$idade_ao_abate_dias, method = "spearman", exact = FALSE) #dava um erro, na net resolvia-se com o exact=FALSE; na prática, deu o mesmo resultado
 # Este tambem deu <0.05 e portanto ha correlacao (again, expected)
 
 
@@ -230,7 +230,7 @@ Abates_peso_2 <- subset(Abates_peso_2[Abates_peso_2$Peso>30,])
 
 # Como nao me lembrava do que era, fiz isto para idade e raca, mas com o subset de idade <2 e peso >30
 # Nao me perguntes o que esta por aqui feito, eu estou tao confusa como tu confia
-teste <- lm(Peso ~ idade_ao_abate_dias + Raca, data=Abates_peso_2)
+teste <- lm(Peso ~ idade_ao_abate_dias + Raca_agrupada, data=Abates_peso_2)
 summary(teste)
 
 layout(matrix(c(1,2,3,4),2,2)) #Isto era para ter os plots de diagnostico separados (avaliar os pressupostos basicamente)
@@ -245,4 +245,6 @@ ggplot(Abates_peso_2, aes(x = idade_ao_abate_dias, y = Peso, shape=Raca_agrupada
   geom_smooth(method=lm,se=FALSE,fullrange=TRUE,
               aes(color=Raca_agrupada))
 
+# Acho que deviamos mandar fora as racas que nao tem grande expressao (tipo as mertolengas e isso, ficavamos so com as mais freq)
+# So para n termos tanta coisa a toa. Parece que nao ha relacao entre peso e idade, its weird, so uma mancha bue a toa
 
