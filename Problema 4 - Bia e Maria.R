@@ -30,7 +30,7 @@ Abates_peso <- select(Abates, Data_abate, Data_nasc, Peso, Raca, Sexo) %>%
     idade_ao_abate= round ((Data_nasc %--% Data_abate) / years(1),1),
     idade_ao_abate_dias= (Data_nasc %--% Data_abate) / days(1),
     Peso = as.numeric(str_replace(Peso, ",", ".")),
-    ) %>% 
+  ) %>% 
   mutate(Raca = (str_replace(Raca,c("<",">"),"")))
 
 ##ESTATÍSTICA DESCRITIVA
@@ -126,7 +126,7 @@ pie_abates_sexo ##VAle a pena?
 graph_abates_raca <- Abates_prop_raca %>% 
   plot_ly(x = ~Frequencia, y = ~Raca, type = 'bar') %>% 
   layout(title = "Abates por Raca") %>%
-  layout(xaxis = list(title = "Frequencia"), yaxis = list(title = "Raca"))  
+  layout(xaxis = list(title = "Frequencia"), yaxis = list(title = "Raca"))
 graph_abates_raca
 
 # Fiz um grafico de barras por range de idades (no plotly)
@@ -230,13 +230,25 @@ layout(matrix(c(1,2,3,4),2,2)) #Isto era para ter os plots de diagnostico separa
 # cuidado que tem de se voltar a por o layout como deve ser
 plot(teste) #plots de diagnostico de assumptions
 
-# agr para dar plot mesmo acho que e isto
-ggplot(Abates_peso_2, aes(x = idade_ao_abate_dias, y = Peso)) +
-  geom_point() +
-  stat_smooth(method = "lm")
-
-
 layout(matrix(c(1,1))) #repor o layout
+
+# agr para dar plot mesmo acho que e isto
+ggplot(Abates_peso_2, aes(x = idade_ao_abate_dias, y = Peso, shape=Raca_)) +
+  geom_point() +
+  geom_smooth(method=lm,se=FALSE,fullrange=TRUE,
+              aes(color=Raca))
+
+
+# Queria agrupar as racas por carne e leite para ser mais facil de ter um grafico facil de ler mas tou meio presa
+carne<- c("CARNE, IND.", "CRUZADO CHAROL�S" ,"CRUZADO DE CARNE", "MERTOLENGA", "CRUZADO LIMOUSINE", "CHAROLESA", "CRUZADO BBB", "CRUZADO DE BLONDE", "LIMOUSINE", "ALENTEJANA","CRUZADO SIMMENTAL-FLECKVIEH")
+leite<- c("FRISIA", "Tipo Fr�sia" , "LEITE, IND.")
+
+Abates_peso_2 <- mutate(
+  Raca_agrupada = str_replace(Abates_peso_2, carne, "Carne"),
+  Raca_agrupada = str_replace(Abates_peso_2, leite, "Leite")
+)
+
+
 
 # Acho que deviamos juntar varias raças pq isto e uma lista enorme de racas diferentes que fica dificil ler
 
