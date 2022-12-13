@@ -26,7 +26,7 @@ Abates <- fread("./Abates.csv")
 # Calculei idade ao abate usando funcao do lubridate %--% e arredondei a 1 casa decimal
 # Peso convertido a numerico, necessario substituir as , por .
 # Queria agrupar as racas por carne e leite para ser mais facil de ter um grafico facil de ler mas tou meio presa
-carne<- c("CARNE, IND.| CRUZADO CHAROL�S|CRUZADO DE CARNE|MERTOLENGA|RUZADO LIMOUSINE|CHAROLESA|CRUZADO BBB | CRUZADO DE BLONDE|LIMOUSINE|ALENTEJANA|CRUZADO SIMMENTAL-FLECKVIEH")
+carne<- c("CARNE, IND.| CRUZADO CHAROL�S|CRUZADO DE CARNE|MERTOLENGA|CRUZADO LIMOUSINE|CHAROLESA|CRUZADO BBB | CRUZADO DE BLONDE|LIMOUSINE|ALENTEJANA|CRUZADO SIMMENTAL-FLECKVIEH")
 leite<- c("FRISIA|Tipo Fr�sia|LEITE, IND.")
 Abates_peso <- select(Abates, Data_abate, Data_nasc, Peso, Raca, Sexo) %>% 
   mutate(
@@ -37,6 +37,8 @@ Abates_peso <- select(Abates, Data_abate, Data_nasc, Peso, Raca, Sexo) %>%
     Raca_agrupada = str_replace(Raca, leite, "Leite")
   ) %>% 
   mutate(Raca = (str_replace(Raca,c("<",">"),"")))
+
+Abates_peso$Raca_agrupada <- ifelse(Abates_peso$Raca_agrupada == "Leite", "Leite", "Carne")
 
 ##ESTATÍSTICA DESCRITIVA
 # Acho que repeti as tabelas de frequencia, mas if anything temos 2 maneiras possiveis de as fazer
