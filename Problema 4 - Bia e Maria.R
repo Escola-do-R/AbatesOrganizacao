@@ -26,8 +26,11 @@ Abates <- fread("./Abates.csv")
 # Calculei idade ao abate usando funcao do lubridate %--% e arredondei a 1 casa decimal
 # Peso convertido a numerico, necessario substituir as , por .
 # Queria agrupar as racas por carne e leite para ser mais facil de ter um grafico facil de ler mas tou meio presa
-carne<- c("CARNE, IND.| CRUZADO CHAROL�S|CRUZADO DE CARNE|MERTOLENGA|CRUZADO LIMOUSINE|CHAROLESA|CRUZADO BBB | CRUZADO DE BLONDE|LIMOUSINE|ALENTEJANA|CRUZADO SIMMENTAL-FLECKVIEH")
-leite<- c("FRISIA|Tipo Fr�sia|LEITE, IND.")
+carne<- c("CARNE, IND.| CRUZADO CHAROL�S|CRUZADO DE CARNE|MERTOLENGA|CRUZADO LIMOUSINE|CHAROLESA|CRUZADO BBB | 
+          CRUZADO DE BLONDE|LIMOUSINE|ALENTEJANA|CRUZADO SIMMENTAL-FLECKVIEH|BLONDE D AQUITAINE|RAMO GRANDE|BARROSA|
+          BRAVA DE LIDE|SALERS|CRUZADO ABERDEEN-ANGUS|MIRANDESA|SIMMENTAL-FLECKVIEH|HEREFORD|MARINHOA|CACHENA|BLANC - BLUE BELGE|
+          MINHOTA|CRUZADO ALENTEJANO|ABERDEEN-ANGUS|AROUQUESA|JARMELISTA|GARVONESA")
+leite<- c("FRISIA|Tipo Fr�sia|LEITE, IND.|JERSEY|NORUEGUESA")
 Abates_peso <- select(Abates, Data_abate, Data_nasc, Peso, Raca, Sexo) %>% 
   mutate(
     idade_ao_abate= round ((Data_nasc %--% Data_abate) / years(1),1),
