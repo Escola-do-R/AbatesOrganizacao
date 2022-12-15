@@ -36,7 +36,7 @@ Abates_peso <- select(Abates, Data_abate, Data_nasc, Peso, Raca, Sexo) %>%
     idade_ao_abate= round ((Data_nasc %--% Data_abate) / years(1),1),
     idade_ao_abate_dias= (Data_nasc %--% Data_abate) / days(1),
     Peso = as.numeric(str_replace(Peso, ",", ".")),
-       Raca_agrupada = str_replace(Raca, leite, "Leite")
+    Raca_agrupada = str_replace(Raca, leite, "Leite")
   ) %>% 
   mutate(Raca = (str_replace(Raca,c("<",">"),"")))
 
@@ -250,6 +250,21 @@ Abates_peso_2 <- subset(Abates_peso[Abates_peso$idade_ao_abate<2,])
 # Subset com peso >30 pq peso minimo de vitelos ao nascimento
 Abates_peso_2 <- subset(Abates_peso_2[Abates_peso_2$Peso>30,])
 
+
+#Criei nova tabela com as contagens por raça, tirei o top 20 e depois voltei à nossa tabela nova (abates_peso_2) para filtar 
+#mantendo só as raças contidas na outra tabela. os mutates nao sei bem para que servem, tirei da net o codigo
+Abates_peso_3 <- Abates_peso_2 %>% 
+  count(Raca) %>% 
+  top_n(20) %>%
+  arrange(n, Raca) %>%
+  mutate(Raca = factor(Raca, levels = unique(Raca)))
+Abates_peso_2 <- Abates_peso_2 %>% filter(Raca %in% Abates_peso_3$Raca) %>%
+  mutate(Raca = factor(Raca, levels = levels(Abates_peso_3$Raca)))
+
+
+
+
+
 # Como nao me lembrava do que era, fiz isto para idade e raca, mas com o subset de idade <2 e peso >30
 # Nao me perguntes o que esta por aqui feito, eu estou tao confusa como tu confia
 teste <- lm(Peso ~ idade_ao_abate_dias + Raca_agrupada, data=Abates_peso_2)
@@ -260,6 +275,7 @@ layout(matrix(c(1,2,3,4),2,2)) #Isto era para ter os plots de diagnostico separa
 plot(teste) #plots de diagnostico de assumptions
 
 layout(matrix(c(1,1))) #repor o layout
+
 
 # agr para dar plot mesmo acho que e isto
 ggplot(Abates_peso_2, aes(x = idade_ao_abate_dias, y = Peso, shape=Raca_agrupada)) +
