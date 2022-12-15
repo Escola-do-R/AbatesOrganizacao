@@ -117,13 +117,18 @@ row.names(Dados_exportações)[2] <- "Animais vivos e produtos do reino animal"
 print(Dados_exportações)
 
 Dados_exportações <- as.data.frame(t(Dados_exportações)) 
-x <- separate(Dados_exportações, V1, into = "Mês",sep = "[^[:alnum:]]+",
-         remove = TRUE,
-         convert = FALSE,
+
+# TENTATIVAS
+test_zoo <- Dados_exportações %>% 
+  mutate(yearmonth = zoo::as.yearmon("Data de Exportação"))
+table(test_zoo$yearmon)
+
+# Ficou uma coluna só com o mês e o ano fugiu
+x <- separate(Dados_exportações, V1, into = "Mês", sep = "[^[:alnum:]]+",
+         remove = FALSE,
+         convert = TRUE,
          extra = "warn",
          fill = "warn")
-# Ficou uma coluna só com o mês e o ano fugiu
-
 
 
 paste0 ("Data de exportação", sep = " ", collapse = NULL, recycle0 = FALSE) 
