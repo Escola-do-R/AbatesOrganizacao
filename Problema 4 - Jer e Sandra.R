@@ -60,13 +60,13 @@ Peso_by_Matadouro_Year <- Peso_by_Matadouro_Year %>%
 
 #Visualization
 #Dont work, will come back to it e VAMOS IGNORAR ;)
-Graph_M_Y <- Peso_by_Matadouro_Year %>% 
-  ggplot(aes(fill=Data, x=Matadouro, y=Avg)) +
-  geom_bar(position = "dodge", stat = "identity") +
-  ggtitle("Média Peso/Abates por Matadouro 2013 - 2017") +
-  xlab("Matadouro") + ylab("Média de Peso")
+#Graph_M_Y <- Peso_by_Matadouro_Year %>% 
+  #ggplot(aes(fill=Data, x=Matadouro, y=Avg)) +
+  #geom_bar(position = "dodge", stat = "identity") +
+  #ggtitle("Média Peso/Abates por Matadouro 2013 - 2017") +
+  #xlab("Matadouro") + ylab("Média de Peso")
 
-Graph_M_Y
+#Graph_M_Y
 
 #kg por mês/ano por exploração. 
 Abates_by_Expl <- Abates %>% 
@@ -90,18 +90,20 @@ Peso_by_Expl_Year <- Peso_by_Expl_Year %>%
 # Verão: 21/06 - 20/09
 # Outono: 21/09 - 20/12 
 
-# Agrupamento por mês e dia
-Stats1 <- Abates_by_Time %>%
-  group_by(Month,Day,Year) %>% 
-  summarise(Avg = mean(numero_abates_data))
+#Jeronimo
 
-ggplot(Stats1, aes(x=factor(Month), y=Avg))+
-  geom_boxplot()+
-  ylab('Média de abates')+
-  xlab('Mês')+
-  theme_bw()
-  
-# Está um gráfico e dá para ver quando há mais abates, podia estar pior ahahah Mas ainda temos de ver se há uma melhor maneira de representar
+Abates_by_Time$Data_abate <- as.Date(Abates_by_Time$Data_abate)
+#install.packages("hydroTSM")
+library(hydroTSM)
+
+Abates_by_Time$Season <- time2season(Abates_by_Time$Data_abate,
+                                     out.fmt = "seasons")
+
+Abates_by_Season <- Abates_by_Time %>% 
+  group_by(Season) %>% 
+  summarise(numero_abates_data = n())
+
+Abates_by_Season
 
 # Passando para o segundo objetivo
 # Relacionar abates com a exportação do INE
