@@ -36,8 +36,7 @@ Abates_peso <- select(Abates, Data_abate, Data_nasc, Peso, Raca, Sexo) %>%
     idade_ao_abate= round ((Data_nasc %--% Data_abate) / years(1),1),
     idade_ao_abate_dias= (Data_nasc %--% Data_abate) / days(1),
     Peso = as.numeric(str_replace(Peso, ",", ".")),
-    Raca_agrupada = str_replace(Raca, carne, "Carne"),
-    Raca_agrupada = str_replace(Raca, leite, "Leite")
+       Raca_agrupada = str_replace(Raca, leite, "Leite")
   ) %>% 
   mutate(Raca = (str_replace(Raca,c("<",">"),"")))
 
@@ -51,6 +50,12 @@ Abates_peso$Raca_agrupada <- ifelse(Abates_peso$Raca_agrupada == "Leite", "Leite
 # Raca
 Abates_prop_raca <- Abates_peso %>% 
   group_by(Raca) %>% 
+  summarise(Frequencia = n()) %>% 
+  mutate(Proporcao= Frequencia / sum(Frequencia))%>% 
+  mutate(Percentagem = (Frequencia / sum(Frequencia) * 100) %>% round(3))
+
+Abates_prop_raca_agrupada <- Abates_peso %>% 
+  group_by(Raca_agrupada) %>% 
   summarise(Frequencia = n()) %>% 
   mutate(Proporcao= Frequencia / sum(Frequencia))%>% 
   mutate(Percentagem = (Frequencia / sum(Frequencia) * 100) %>% round(3))
@@ -108,7 +113,9 @@ Freq_abates_peso <- Abates_peso %>%
 #TABELAS CONTIGÊNCIA 2VARIÁVEIS
 #peso-raça
 tabela_PxR <- as.data.frame.matrix(table(Abates_peso$peso_range,Abates_peso$Raca))
+tabela_PxRA <- as.data.frame.matrix(table(Abates_peso$peso_range,Abates_peso$Raca_agrupada))
 tabela_PxR
+tabela_PxRA
 #peso-sexo
 tabela_PxS <- as.data.frame.matrix(table(Abates_peso$peso_range,Abates_peso$Sexo))
 tabela_PxS
@@ -136,21 +143,26 @@ pie_abates_sexo ##VAle a pena?
 graph_abates_raca <- Abates_prop_raca %>% 
   plot_ly(x = ~Frequencia, y = ~Raca, type = 'bar') %>% 
   layout(title = "Abates por Raca") %>%
-  layout(xaxis = list(title = "Frequencia"), yaxis = list(title = "Raca"))
+  layout(xaxis = list(title = "Frequência"), yaxis = list(title = "Raça"))
+graph_abates_raca_agrupada <- Abates_prop_raca_agrupada %>% 
+  plot_ly(y = ~Frequencia, x = ~Raca_agrupada, type = 'bar') %>% 
+  layout(title = "Abates por Tipo de Raça") %>%
+  layout(yaxis = list(title = "Frequência"), xaxis = list(title = "Raça"))
 graph_abates_raca
+graph_abates_raca_agrupada
 
 # Fiz um grafico de barras por range de idades (no plotly)
 graph_abates_idade <- Abates_prop_idade %>% 
   plot_ly(x=~Frequencia, y=~idade_range, type="bar") %>%
   layout(title="Abates por Idade") %>%
-  layout(xaxis = list(title = "Frequencia"), yaxis = list(title = "Idade"))  
+  layout(xaxis = list(title = "Frequência"), yaxis = list(title = "Idade"))  
 graph_abates_idade
 
 #Histograma idades
 histo_idade <- Abates_peso %>% 
   plot_ly(x=~idade_range, type="histogram") %>%
   layout(title="Abates por Idade") %>%
-  layout(xaxis = list(title = "Idade"), yaxis = list(title = "Frequencia"))
+  layout(xaxis = list(title = "Idade"), yaxis = list(title = "Frequência"))
 histo_idade
 
 #grafico plotly para as ranges de peso
@@ -178,6 +190,12 @@ box_peso_raca <- Abates_peso %>%
   layout(yaxis = list(title= "Raça")) %>%
   layout(showlegend = FALSE)
 box_peso_raca  
+box_peso_raca_agrupada <- Abates_peso %>%
+  plot_ly(y=~Raca_agrupada, x=~Peso, type="box", color = ~Raca_agrupada)%>% 
+  layout(title="Peso ao Abate por Raça") %>%
+  layout(yaxis = list(title= "Raça")) %>%
+  layout(showlegend = FALSE)
+box_peso_raca_agrupada
   
 box_peso_idade <- Abates_peso %>%
   plot_ly(y=~idade_range, x=~Peso, type="box", color=~idade_range)%>%
@@ -216,7 +234,8 @@ cor.test(Abates_peso$Peso, Abates_peso$idade_ao_abate_dias, method = "spearman",
 # isto seria um chisquare acho
 chisq.test(Abates_peso$peso_range, Abates_peso$Raca) ##na sebenta de biomat diz que a variavel tem que ser quantitaiva em intervalos de classe, por isso troquei
 # Deu p<0.05 e portanto verificamos associacao estatisticamente significativa entre raca e peso
-
+chisq.test(Abates_peso$peso_range, Abates_peso$Raca_agrupada)
+# Deu p<0.05 e portanto verificamos associacao estatisticamente significativa entre raca agrupada e peso
 
 
 ### PESO-SEXO (quantitativa - qualitativa binaria)
