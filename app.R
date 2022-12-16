@@ -36,7 +36,3 @@ server <- function(input, output) {
 
 # Run app ----
 shinyApp(ui, server)
-
-# sliderInput("range", 
-#             label = "Range of interest:",
-#             min = 0, max = Inf, value = c(0, Inf))
