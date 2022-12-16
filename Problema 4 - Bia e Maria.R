@@ -299,6 +299,8 @@ ggplot(Abates_peso_2, aes(x = idade_ao_abate_dias, y = Peso, shape=Raca_agrupada
   geom_smooth(method=lm,se=FALSE,fullrange=TRUE,
               aes(color=Raca_agrupada))
 
-# Acho que deviamos mandar fora as racas que nao tem grande expressao (tipo as mertolengas e isso, ficavamos so com as mais freq)
-# So para n termos tanta coisa a toa. Parece que nao ha relacao entre peso e idade, its weird, so uma mancha bue a toa
-
+# Vou tentar fazer uma coisa pq nao temos dados com dist normal
+library(mblm)
+teste_n = mblm(Peso ~idade_ao_abate_dias, data= Abates_peso_2)
+summary(mblm(Peso ~idade_ao_abate_dias, data= Abates_peso_2))
+# so um heads up, isto demora imensooo tempo a correr, tanto que eu desisti 2x pq estava so a olhar para o pc
