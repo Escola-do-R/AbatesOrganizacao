@@ -5,7 +5,6 @@ library(freqtables)
 library(plotly)
 library(rstatix)
 library(ggplot2)
-library(emmeans)
 
 Abates <- fread("./Abates.csv") 
 
@@ -293,19 +292,6 @@ layout(matrix(c(1,2,3,4),2,2)) #Isto era para ter os plots de diagnostico separa
 # cuidado que tem de se voltar a por o layout como deve ser
 plot(teste) #plots de diagnostico de assumptions
 
-
-emmeans(teste, ~ Raca_agrupada)
-# Resultado: 
-# Raca_agrupada emmean     SE     df lower.CL upper.CL
-# Carne          282.5 0.1383 252378    282.2    282.7
-# Leite          219.4 0.3577 252378    218.7    220.1
-# Confidence level used: 0.95
-
-# Comparar efeitos marginais 
-emmeans(teste, pairwise ~ Raca_agrupada)
-# $contrasts
-# contrast      estimate    SE     df t.ratio p.value
-# Carne - Leite     63.1 0.395 252378 159.766  <.0001
 
 layout(matrix(c(1,1))) #repor o layout
 
