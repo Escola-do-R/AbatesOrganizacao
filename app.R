@@ -2,7 +2,7 @@ library(shiny)
 library(maps)
 library(mapproj)
 
-source("./Problema 4 - Cris e Inês.R")
+source("./Problema 4 - Cris e Inês.R", encoding = "utf-8")
 
 # User interface ----
 ui <- fluidPage(
@@ -20,14 +20,14 @@ ui <- fluidPage(
                   selected = "Santa Carnes")
     ),
     
-    mainPanel(verbatimTextOutput(outputId = "mapa"))
+    mainPanel(leafletOutput(outputId = "mapa"))
   )
 )
 
 # Server logic ----
 server <- function(input, output) {
-  output$mapa <- renderPrint({
-   switch(input$var, 
+  output$mapa <- renderLeaflet({
+    switch(input$var, 
            "Santa Carnes" = SantaCarnes_leaflet,
            "Raporal" = Raporal_leaflet,
            "Regional de Mafra" = RegMafra_leaflet)

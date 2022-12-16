@@ -96,7 +96,7 @@ tab_exp_tipoabate2 <- select(Abates1, Exploracao, Tipo_abate)
 mapa_continente <- st_read("Cont_AAD_CAOP2020")
 mapa_continente$geometry <- st_transform(mapa_continente$geometry, "+init=epsg:4326")
 
-Codme <- fread("./Cód_ME_DiCo.csv") %>% unique
+Codme <- fread("./Cod_ME_DiCo.csv") %>% unique
 Total_Caract_Expl <- fread("./FicheiroTotalCaracterizacaoExploracoes-2022-10-04.csv")
 Freguesias <- fread("./Correspondências freg 2013-14.csv")
 # # # # # # # # # # # # # # # # # # # # # # # # 
