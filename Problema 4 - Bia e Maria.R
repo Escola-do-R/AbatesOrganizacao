@@ -270,6 +270,24 @@ Abates_peso_2 <- Abates_peso_2 %>% filter(Raca %in% Abates_peso_3$Raca) %>%
 # Nao me perguntes o que esta por aqui feito, eu estou tao confusa como tu confia
 teste <- lm(Peso ~ idade_ao_abate_dias + Raca_agrupada, data=Abates_peso_2)
 summary(teste)
+# Call:
+#   lm(formula = Peso ~ idade_ao_abate_dias + Raca_agrupada, data = Abates_peso_2)
+# 
+# Residuals:
+#   Min      1Q  Median      3Q     Max 
+# -352.22  -42.84   -1.64   43.78  358.91 
+# 
+# Coefficients:
+#                       Estimate Std. Error t value Pr(>|t|)    
+# (Intercept)         121.872057   0.571226   213.4   <2e-16 ***
+#   idade_ao_abate_dias   0.374490   0.001229   304.6   <2e-16 ***
+#   Raca_agrupadaLeite  -63.054908   0.394671  -159.8   <2e-16 ***
+#   ---
+#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+# 
+# Residual standard error: 62.73 on 252378 degrees of freedom
+# Multiple R-squared:  0.4537,	Adjusted R-squared:  0.4536 
+# F-statistic: 1.048e+05 on 2 and 252378 DF,  p-value: < 2.2e-16
 
 layout(matrix(c(1,2,3,4),2,2)) #Isto era para ter os plots de diagnostico separados (avaliar os pressupostos basicamente)
 # cuidado que tem de se voltar a por o layout como deve ser
@@ -304,3 +322,5 @@ library(mblm)
 teste_n = mblm(Peso ~idade_ao_abate_dias, data= Abates_peso_2)
 summary(mblm(Peso ~idade_ao_abate_dias, data= Abates_peso_2))
 # so um heads up, isto demora imensooo tempo a correr, tanto que eu desisti 2x pq estava so a olhar para o pc
+
+# Fazer um subset dos dados random e ver se corre
