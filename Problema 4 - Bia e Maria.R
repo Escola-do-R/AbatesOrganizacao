@@ -319,8 +319,24 @@ ggplot(Abates_peso_2, aes(x = idade_ao_abate_dias, y = Peso, shape=Raca_agrupada
 
 # Vou tentar fazer uma coisa pq nao temos dados com dist normal
 library(mblm)
-teste_n = mblm(Peso ~idade_ao_abate_dias, data= Abates_peso_2)
-summary(mblm(Peso ~idade_ao_abate_dias, data= Abates_peso_2))
-# so um heads up, isto demora imensooo tempo a correr, tanto que eu desisti 2x pq estava so a olhar para o pc
+# Fazer um subset dos dados random e ver se corre pq estava a demorar mais de 3h a correr com a df toda
 
-# Fazer um subset dos dados random e ver se corre
+subseto <- Abates_peso_2[sample(nrow(Abates_peso_2), 100), ]
+teste_m <- mblm(Peso ~idade_ao_abate_dias, data=subseto)
+teste_m
+summary(teste_m)
+
+# Residuals:
+# Min      1Q  Median      3Q     Max 
+# -200.18  -50.54  -16.18   38.61  120.06 
+# 
+# Coefficients:
+#   Estimate      MAD V value Pr(>|V|)    
+# (Intercept)          61.9250 110.8739    4252 2.92e-09 ***
+#   idade_ao_abate_dias   0.4940   0.2125    4874 6.75e-16 ***
+#   ---
+#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+# 
+# Residual standard error: 68.52 on 98 degrees of freedom
+
+# Isto nao me parece diferir do resultado que temos do linear model parametrico, entao foi so uma experiencia gira, moving on
