@@ -434,9 +434,10 @@ Abates_peso_2 <- Abates_peso_2 %>% filter(Raca %in% Abates_peso_3$Raca) %>%
 teste <- lm(Peso ~ idade_ao_abate_dias + Raca_agrupada, data=Abates_peso_2)
 summary(teste)
 
-plot(teste) 
 
 ```
+
+Temos então uma regressão Peso = 0.456idade_ao_abate_dias -60.8Raca_leite, que pode ser interpretada como o peso ao abate aumenta em 456 gramas por cada dia de idade do animal, e se tivermos uma raça de leite, esta terá menos 60.8kg do que se fosse uma raça de carne.
 
 Ao mapear as regressões no que toca à associação do peso ao abate com a idade (em dias) dos animais, estratificando por raça, vemos que as raças de leite têm um menor peso ao abate aos 24m, quando comparadas com as raças de carne
 
