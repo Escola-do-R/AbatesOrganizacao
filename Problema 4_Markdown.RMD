@@ -15,6 +15,7 @@ library(freqtables)
 library(plotly)
 library(rstatix)
 library(car)
+library(ggplot2)
 
 ```
 
@@ -80,9 +81,15 @@ Abates_prop_raca <- Abates_peso %>%
   summarise(Frequência = n()) %>% 
   mutate(Proporção= Frequência / sum(Frequência))%>% 
   mutate(Percentagem = (Frequência / sum(Frequência) * 100) %>% round(3))
+Abates_prop_raca_agrupada <- Abates_peso %>% 
+  group_by(Raca_agrupada) %>% 
+  summarise(Frequencia = n()) %>% 
+  mutate(Proporcao= Frequencia / sum(Frequencia))%>% 
+  mutate(Percentagem = (Frequencia / sum(Frequencia) * 100) %>% round(3))
 ```
 ```{r echo=F}
-as.data.frame(Abates_prop_raca)
+as.data.frame(Abates_prop_raca)         
+as.data.frame(Abates_prop_raca_agrupada)
 ```
 
 **2. Sexo**     
@@ -190,6 +197,7 @@ as.data.frame(Abates_prop_peso)
 
 ```{r include=F}
 tabela_PxR <- as.data.frame.matrix(table(Abates_peso$peso_range,Abates_peso$Raca))
+tabela_PxRA <- as.data.frame.matrix(table(Abates_peso$peso_range,Abates_peso$Raca_agrupada))
 tabela_PxS <- as.data.frame.matrix(table(Abates_peso$peso_range,Abates_peso$Sexo))
 tabela_PxI <- as.data.frame.matrix(table(Abates_peso$peso_range,Abates_peso$idade_range))
 ```
@@ -198,6 +206,7 @@ tabela_PxI <- as.data.frame.matrix(table(Abates_peso$peso_range,Abates_peso$idad
 
 ```{r echo=F}
 tabela_PxR
+tabela_PxRA
 ```
 
 **2. Peso-Sexo**
@@ -224,7 +233,12 @@ graph_abates_sexo <- Abates_prop_sexo %>%
 graph_abates_raca <- Abates_prop_raca %>% 
   plot_ly(x = ~Frequência, y = ~Raca, type = 'bar') %>% 
   layout(title = "Abates por Raça") %>%
-  layout(xaxis = list(title = "Frequência"), yaxis = list(title = "Raça"))  
+  layout(xaxis = list(title = "Frequência"), yaxis = list(title = "Raça"))    
+
+graph_abates_raca_agrupada <- Abates_prop_raca_agrupada %>% 
+  plot_ly(y = ~Frequencia, x = ~Raca_agrupada, type = 'bar') %>% 
+  layout(title = "Abates por Tipo de Raça") %>%
+  layout(yaxis = list(title = "Frequência"), xaxis = list(title = "Raça"))    
 
 graph_abates_idade <- Abates_prop_idade %>% 
   plot_ly(x=~Frequência, y=~idade_range, type="bar") %>%
@@ -256,7 +270,8 @@ graph_abates_sexo
 Gráfico de Barras
 
 ```{r echo=F}
-graph_abates_raca
+graph_abates_raca     
+graph_abates_raca_agrupada
 ```
 
 **3. Idade**   
@@ -297,7 +312,12 @@ box_peso_raca <- Abates_peso %>%
   plot_ly(y=~Raca, x=~Peso, type="box", color = ~Raca)%>% 
   layout(title="Peso ao Abate por Raça") %>%
   layout(yaxis = list(title= "Raça")) %>%
-  layout(showlegend = FALSE)
+  layout(showlegend = FALSE)    
+box_peso_raca_agrupada <- Abates_peso %>%
+  plot_ly(y=~Raca_agrupada, x=~Peso, type="box", color = ~Raca_agrupada)%>% 
+  layout(title="Peso ao Abate por Raça") %>%
+  layout(yaxis = list(title= "Raça")) %>%
+  layout(showlegend = FALSE)    
   
 box_peso_idade <- Abates_peso %>%
   plot_ly(y=~idade_range, x=~Peso, type="box", color=~idade_range)%>%
@@ -315,7 +335,8 @@ box_peso_idade
 
    
 ```{r echo=F}
-box_peso_raca
+box_peso_raca   
+box_peso_raca_agrupada   
 ```
 
    
@@ -376,10 +397,11 @@ Como p<0.05, rejeita-se a hipótese nula, ou seja: há correlação entre o peso
 Tratando-se de uma variável quantitativa e outra qualitativa, quisemos realizar um **teste de qui-quadrado**.
 
 ```{r echo=F}
-chisq.test(Abates_peso$peso_range, Abates_peso$Raca)
+chisq.test(Abates_peso$peso_range, Abates_peso$Raca)     
+chisq.test(Abates_peso$peso_range, Abates_peso$Raca_agrupada)    
 ```
 
-Como p<0.05, rejeita-se a hipótese nula, ou seja: existe associação estatisticamente significativa entre raça e peso.
+Como p<0.05, rejeita-se a hipótese nula, ou seja: existe associação estatisticamente significativa entre raça e peso, considerando cada raça individualmente, bem como considerando o tipo de raça (carne/leite).
     
 **3. Peso-Sexo**  
 
@@ -394,6 +416,18 @@ Como p<0.05, rejeita-se a hipótese nula, ou seja: existe associação estatisti
 **Análise múltipla**
 
 Tentamos fazer análise múltipla de modo a relacionar o peso ao abate com a idade e a raça dos animais.São aqui apresentados os gráficos de diagnóstico para a realização de uma regressão múltipla:
+
+```{r include=F}
+Abates_peso_2 <- subset(Abates_peso[Abates_peso$idade_ao_abate<2,])
+Abates_peso_2 <- subset(Abates_peso_2[Abates_peso_2$Peso>30,])
+Abates_peso_3 <- Abates_peso_2 %>% 
+  count(Raca) %>% 
+  top_n(20) %>%
+  arrange(n, Raca) %>%
+  mutate(Raca = factor(Raca, levels = unique(Raca)))
+Abates_peso_2 <- Abates_peso_2 %>% filter(Raca %in% Abates_peso_3$Raca) %>%
+  mutate(Raca = factor(Raca, levels = levels(Abates_peso_3$Raca)))
+```
 
 ```{r echo=F}
 
