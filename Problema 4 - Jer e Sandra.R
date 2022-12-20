@@ -108,33 +108,38 @@ Abates_by_Season
 # Passando para o segundo objetivo
 # Relacionar abates com a exportação do INE
 
-Dados_exportações <- fread("C:/Users/ASUS/Desktop/Epi/Problema 4 Abates/Abates/Abates Organizacao/Dados_INE_2013_2017.csv", encoding = "UTF-8") 
+Dados_exportações <- fread("./Exportacao 12-18.csv") 
+Dados_exportações <- Dados_exportações[-c(1,2,4,5,6), -8] 
 
-Dados_exportações <- Dados_exportações[c(8,13),] 
-row.names(Dados_exportações)[1] <- "Data de Exportação" 
-row.names(Dados_exportações)[2] <- "Animais vivos e produtos do reino animal" 
+#Data cleaning
+
+Dados_exportações <- as.data.frame(t(Dados_exportações))
+Abates_by_Year_Sum_Export<- Abates_by_Year_Sum_Export[-6,]
+colnames(Dados_exportações)[1] <- "Year" 
+colnames(Dados_exportações)[2] <- "Total de Exportações (Euro)" 
+colnames(Dados_exportações)[3] <- "Intra EU (Euro)"
+colnames(Dados_exportações)[4] <- "Extra EU (Euro)" 
+
+Dados_exportações <- Dados_exportações[-1,]
+Dados_exportações$Year <- as.numeric(Dados_exportações$Year)
+Dados_exportações$`Total de Exportações (Euro)` <- as.numeric(Dados_exportações$`Total de Exportações (Euro)`)
 
 print(Dados_exportações)
 
-Dados_exportações <- as.data.frame(t(Dados_exportações)) 
+Correlation_Abate_Export <- full_join(Abates_by_Time, Dados_exportações, by = "Year")
 
-# TENTATIVAS
-test_zoo <- Dados_exportações %>% 
-  mutate(yearmonth = zoo::as.yearmon("Data de Exportação"))
-table(test_zoo$yearmon)
+Abates_by_Year_Sum <- aggregate(Correlation_Abate_Export["numero_abates_data"], by = Correlation_Abate_Export["Year"], sum)
 
-# Ficou uma coluna só com o mês e o ano fugiu
-x <- separate(Dados_exportações, V1, into = "Mês", sep = "[^[:alnum:]]+",
-         remove = FALSE,
-         convert = TRUE,
-         extra = "warn",
-         fill = "warn")
+Abates_by_Year_Sum_Export <- left_join(Abates_by_Year_Sum, Dados_exportações) %>% 
+  as.data.frame()
 
+#install.packages("ggpubr")
+library("ggpubr")
 
-paste0 ("Data de exportação", sep = " ", collapse = NULL, recycle0 = FALSE) 
- 
-Dados_exportações$Data <- as.yearmon(paste(Dados_exportações$Year, Dados_exportações$Month), 
-                         "%Y %m")
+ggqqplot(Abates_by_Year_Sum_Export$`Total de Exportações (Euro)`, ylab = "Eur")
+ggqqplot(Abates_by_Year_Sum_Export$numero_abates_data, ylab = "N")
 
+Pearson_Test <- cor.test(Abates_by_Year_Sum_Export$`Total de Exportações (Euro)`, Abates_by_Year_Sum_Export$numero_abates_data,
+                         method = "pearson")
 
-
+Pearson_Test
