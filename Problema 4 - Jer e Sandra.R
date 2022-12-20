@@ -1,4 +1,4 @@
-setwd("C:/Users/ASUS/Desktop/Epi/Problema 4 Abates/Abates/Abates Organizacao")
+setwd("C:/Users/ASUS/Desktop/Epi/Problema 4 Abates/Abates/AbatesOrganizacao")
 library(data.table)
 library(dplyr)
 library(ggplot2)
@@ -90,8 +90,6 @@ Peso_by_Expl_Year <- Peso_by_Expl_Year %>%
 # Verão: 21/06 - 20/09
 # Outono: 21/09 - 20/12 
 
-#Jeronimo
-
 Abates_by_Time$Data_abate <- as.Date(Abates_by_Time$Data_abate)
 #install.packages("hydroTSM")
 library(hydroTSM)
@@ -108,19 +106,24 @@ Abates_by_Season
 # Passando para o segundo objetivo
 # Relacionar abates com a exportação do INE
 
-Dados_exportações <- fread("./Exportacao 12-18.csv") 
-Dados_exportações <- Dados_exportações[-c(1,2,4,5,6), -8] 
+Dados_exportações <- fread("./Exportacao 12-18.csv")
+Dados_exportações <- Dados_exportações[-c(1,2,4,5,6,15:47)] 
 
 #Data cleaning
 
-Dados_exportações <- as.data.frame(t(Dados_exportações))
-Abates_by_Year_Sum_Export<- Abates_by_Year_Sum_Export[-6,]
+Dados_exportações <- as.data.frame(t(Dados_exportações)) 
+Dados_exportações <- Dados_exportações[,-2, -1]
+Dados_exportações <- Dados_exportações[,-4, -5]
+Dados_exportações <- Dados_exportações[,-1]
+Dados_exportações <- Dados_exportações[,-2, -3]
+Dados_exportações <- Dados_exportações[,-2]
+
 colnames(Dados_exportações)[1] <- "Year" 
 colnames(Dados_exportações)[2] <- "Total de Exportações (Euro)" 
 colnames(Dados_exportações)[3] <- "Intra EU (Euro)"
 colnames(Dados_exportações)[4] <- "Extra EU (Euro)" 
 
-Dados_exportações <- Dados_exportações[-1,]
+Dados_exportações <- Dados_exportações[-c(1,2),]
 Dados_exportações$Year <- as.numeric(Dados_exportações$Year)
 Dados_exportações$`Total de Exportações (Euro)` <- as.numeric(Dados_exportações$`Total de Exportações (Euro)`)
 
@@ -132,7 +135,7 @@ Abates_by_Year_Sum <- aggregate(Correlation_Abate_Export["numero_abates_data"], 
 
 Abates_by_Year_Sum_Export <- left_join(Abates_by_Year_Sum, Dados_exportações) %>% 
   as.data.frame()
-
+Abates_by_Year_Sum_Export<- Abates_by_Year_Sum_Export[-6,]
 #install.packages("ggpubr")
 library("ggpubr")
 
