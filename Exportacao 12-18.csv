@@ -1,0 +1,47 @@
+Quadro extraído em 19 de Dezembro de 2022 (09:57:03);;;;;;
+http://www.ine.pt;;;;;;
+;;;;;;
+;;;;;;
+;;;;;;
+Local de destino (1) ;Exportações (?) de bens por Local de destino e Tipo de bens (Nomenclatura combinada - NC8) -  Anual (2) ;;;;;
+;Período de referência dos dados;;;;;
+;2018;2017;2016;2015;2014;2013
+;Tipo de bens (Nomenclatura combinada - NC8);;;;;
+;Animais vivos da espécie bovina;;;;;
+;? ;? ;? ;? ;? ;? 
+MUNDO: Mundo;92639270;87766076;87495635;50698091;32611477;30862519
+INTRA: Intra União Europeia;27871761;32146825;35318207;41056892;32611477;30862519
+EXTRA: Extra União Europeia;64767509;55619251;52177428;9641199;0;0
+;;;;;;
+Exportações (?) de bens por Local de destino e Tipo de bens (Nomenclatura combinada - NC8) -  Anual - INE, Estatísticas do comércio internacional de bens;;;;;;
+;;;;;;
+Nota(s):;;;;;;
+(1) Tendo em conta o acordo de saída celebrado entre a União Europeia e o Reino Unido e do Protocolo relativo à Irlanda/Irlanda do Norte, a partir de janeiro de 2021, o código de país GB deixa de ser válido, e desdobra-se em dois códigos -  código XU (Reino Unido-exceto Irlanda do Norte), e código XI  (Reino Unido - inclui Irlanda do Norte).;;;;;;
+;;;;;;
+"(2) Dados definitivos de 2000 a 2021 e preliminares de 2022. <br/>Este indicador tem por base a classificação Nomenclatura Combinada, que é alvo de alterações anualmente, o que tornou necessária a construção de uma classificação cumulativa de todos os períodos disponibilizados. Para consulta dos códigos NC ativos em cada ano deve aceder a <a href=""http://smi.ine.pt/Versao/Detalhes/3830""target=""_blank""> http://smi.ine.pt/Versao/Detalhes/3830</a> selecionando o ano pretendido. <br/> O valor 0 (zero) associado às várias ocorrências poderá significar valor nulo, código de produto inexistente no ano em causa ou dado confidencial. <br/>A coluna do Total poderá não corresponder à soma das várias componentes, por questões de tratamento de confidencialidade. <br/> Os dados relativos a 2015 foram alvo de uma atualização extraordinária a 08/09/2017, que resulta numa alteração dos valores das exportações (Intra-UE).<br/>Os dados deste indicador relativos ao ano de 2019 do comércio Intra-UE foram atualizados a 14/05/2019.";;;;;;
+;;;;;;
+;;;;;;
+;;;;;;
+Última atualização destes dados: 09 de agosto de 2022;;;;;;
+;;;;;;
+;;;;;;
+Metainformação associada ao quadro;;;;;;
+;;;;;;
+Exportações (?) de bens;;;;;;
+Designação;Exportações (?) de bens por Local de destino e Tipo de bens (Nomenclatura combinada - NC8) -  Anual;;;;;
+Periodicidade;Anual;;;;;
+Fonte;INE, Estatísticas do comércio internacional de bens;;;;;
+Primeiro período disponível;2000;;;;;
+Último período disponível;2021;;;;;
+Dimensões;;;;;;
+     Dimensão 1;Período de referência dos dados;;;;;
+     Dimensão 2;Local de destino;;;;;
+     Dimensão 3;Tipo de bens (Nomenclatura combinada - NC8);;;;;
+Conceitos;;;;;;
+     SAÍDA;Somatório das expedições de mercadorias efetuadas por Portugal para os restantes Estados-membros, com as exportações de Portugal para os países terceiros.;;;;;
+     PERÍODO DE REFERÊNCIA;Período de tempo a que a informação se refere e que pode ser um dia específico ou um intervalo de tempo (mês, ano fiscal, ano civil, entre outros).;;;;;
+Definição;;;;;;
+Fórmula;;;;;;
+Unidade de Medida (símbolo);Euro (?);;;;;
+Potência de 10;0;;;;;
+Data da última atualização;09-Aug-2022;;;;;
